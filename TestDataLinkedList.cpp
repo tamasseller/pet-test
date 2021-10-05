@@ -453,16 +453,9 @@ TEST(NonEmptyLinkedList, IteratorInsertRemoveSwap) {
 	CHECK(it.current() == 0);
 }
 
-TEST(NonEmptyLinkedList, TakeOver) {
-	LinkedList<SimpleElement> newList;
-
-	SimpleElement e4;
-
-	newList.add(&e4);
-
-	CHECK(!newList.isEmpty());
-
-	newList.take(list);
+TEST(NonEmptyLinkedList, TakeOver)
+{
+	LinkedList<SimpleElement> newList(pet::move(list));
 
 	CHECK(list.isEmpty());
 

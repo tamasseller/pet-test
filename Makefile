@@ -19,6 +19,7 @@ SOURCES += TestDataBinaryTree.cpp
 SOURCES += TestDataBinaryHeap.cpp
 SOURCES += TestDataDoubleList.cpp
 SOURCES += TestDataLinkedList.cpp
+SOURCES += TestDataLinkedListSpecial.cpp
 SOURCES += TestDataLinRegFilter.cpp
 SOURCES += TestDataMedianFilter.cpp
 SOURCES += TestDataMutableStorage.cpp
@@ -26,7 +27,10 @@ SOURCES += TestDataPriorityQueue.cpp
 SOURCES += TestDataCircularBuffer.cpp
 SOURCES += TestDataOrderedDoubleList.cpp
 SOURCES += TestIntegrationRefCntDelegate.cpp
+SOURCES += TestIntegrationSmartPtrLinkedList.cpp
 SOURCES += TestManagedTreeMap.cpp
+SOURCES += TestManagedRefCnt.cpp
+SOURCES += TestManagedUnique.cpp
 SOURCES += TestMetaConfiguration.cpp
 SOURCES += TestMetaExpLog.cpp
 SOURCES += TestMetaExpRange.cpp
@@ -60,7 +64,6 @@ SOURCES += TestHeapHost6.cpp
 SOURCES += TestHeapTlsf.cpp
 SOURCES += TestHeapTlsfStress.cpp
 SOURCES += TestHeapBuddy.cpp
-SOURCES += TestManagedRefCnt.cpp
 SOURCES += TestUbiqTrace.cpp
 
 # Test support
