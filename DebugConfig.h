@@ -41,16 +41,4 @@ CLIENT_TRACE_POLICY_NS(ns, C, Warning);
 
 CLIENT_TRACE_POLICY(TestTraceTag, All);
 
-UNCHECKED_ERROR_REPORT() 
-{
-	if(assertMocked) 
-	{
-		MOCK()::CALL(uncheckedErrorReport);
-	}
-	else 
-	{
-	    FAIL("Unchecked Error");
-	}
-}
-
 #endif /* DEBUGCONFIG_H_ */

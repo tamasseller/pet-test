@@ -60,19 +60,22 @@ TEST_GROUP(AvlTrace) {
 	unsigned int space[1024/sizeof(unsigned int)];
 };
 
-TEST(AvlTrace, Trace1) {
+TEST(AvlTrace, Trace1)
+{
 	InstrumentedHeap heap;
 	heap.init(space, sizeof(space));
+
 	auto x2 = heap.alloc(16);
-	CHECK(!x2.failed());
+	CHECK(x2 != nullptr);
 	auto x3 = heap.alloc(16);
-	CHECK(!x3.failed());
+	CHECK(x3 != nullptr);
 	auto x4 = heap.alloc(16);
-	CHECK(!x4.failed());
+	CHECK(x4 != nullptr);
 	auto x6 = heap.alloc(16);
-	CHECK(!x6.failed());
+	CHECK(x6 != nullptr);
 	auto x7 = heap.alloc(16);
-	CHECK(!x7.failed());
+	CHECK(x7 != nullptr);
+
 	heap.free(x6);
 	heap.free(x3);
 	heap.free(x2);

@@ -165,7 +165,7 @@ TEST_GROUP(TestHeap) {
 
 		void *alloc(unsigned int size, bool shouldFail = false) {
 			auto ret = heap.alloc(size);
-			CHECK(ret.failed() == shouldFail);
+			CHECK((ret == nullptr) == shouldFail);
 			return ret;
 		}
 	};
