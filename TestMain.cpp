@@ -24,7 +24,11 @@
 int main(int ac, char** av)
 {
 	if(pet::TestRunner::getTestCount() > 50)
+	{
 	    return pet::TestRunner::Experimental::runTestsInParallel();
+	}
 	else
+	{
 		return pet::TestRunner::runAllTests(&pet::PrintfOutput::instance);
+	}
 }

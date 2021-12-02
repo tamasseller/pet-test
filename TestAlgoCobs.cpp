@@ -244,11 +244,14 @@ TEST(CobsCodec, CatenatedCanonicalTestVectors)
 		buff << TestEncoder::encode(tv);
 	}
 
-	TestDecoder dec(buff.str());
+	auto str = buff.str();
+	TestDecoder dec(str);
+
 	for(const auto& tv: testVectors)
 	{
 		CHECK(dec.decodeBlock());
-		CHECK(dec.str() == tv);
+		bool ok = dec.str() == tv;
+		CHECK(ok);
 	}
 
 	CHECK(!dec.decodeBlock());
