@@ -87,7 +87,7 @@ class HeapStress: pet::Trace<HeapStressTestTraceTag> {
 			auto ptr = heap.alloc(blockSize);
 			CHECK(heap.dump(data));
 
-			if(ptr.failed())
+			if(ptr == nullptr)
 				break;
 
 			memset(ptr, 0x5a, blockSize);

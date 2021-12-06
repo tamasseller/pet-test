@@ -23,7 +23,6 @@
 #include <malloc.h>
 
 #include "1test/FailureInjector.h"
-#include "ubiquitous/Error.h"
 #include "ubiquitous/Trace.h"
 
 class MockAllocatorTrace: public pet::Trace<MockAllocatorTrace> {};

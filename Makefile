@@ -31,7 +31,6 @@ SOURCES += TestIntegrationSmartPtrLinkedList.cpp
 SOURCES += TestManagedTreeMap.cpp
 SOURCES += TestManagedRefCnt.cpp
 SOURCES += TestManagedUnique.cpp
-SOURCES += TestMetaConfiguration.cpp
 SOURCES += TestMetaExpLog.cpp
 SOURCES += TestMetaExpRange.cpp
 SOURCES += TestMetaMetaString.cpp
@@ -43,16 +42,7 @@ SOURCES += TestMetaStateChange.cpp
 SOURCES += TestMetaTuple.cpp
 SOURCES += TestMetaTypePackInfo.cpp
 SOURCES += TestPlatformAtomic.cpp
-SOURCES += TestPoolArena.cpp
-SOURCES += TestPoolFifo.cpp
-SOURCES += TestPoolPool.cpp
-SOURCES += TestPoolStack.cpp
-SOURCES += TestPoolStaticStack.cpp
-#SOURCES += TestPoolStringStorage.cpp
 SOURCES += TestUbiqDelegate.cpp
-SOURCES += TestUbiqFailable.cpp
-SOURCES += TestUbiqError.cpp
-SOURCES += TestModules.cpp
 SOURCES += TestHeapAvlStress.cpp
 SOURCES += TestHeapBestFitStress.cpp
 SOURCES += TestHeapHost1.cpp
@@ -65,6 +55,7 @@ SOURCES += TestHeapTlsf.cpp
 SOURCES += TestHeapTlsfStress.cpp
 SOURCES += TestHeapBuddy.cpp
 SOURCES += TestUbiqTrace.cpp
+
 
 # Test support
 

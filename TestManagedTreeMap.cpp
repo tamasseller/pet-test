@@ -24,7 +24,7 @@
 
 using namespace pet;
 
-typedef DynamicTreeMap<int, int, FailableAllocator> TestMap;
+typedef TreeMap<int, int, FailableAllocator> TestMap;
 
 TEST_GROUP(TreeMapHeadless) {
 };

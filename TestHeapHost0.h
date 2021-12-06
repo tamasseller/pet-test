@@ -104,7 +104,7 @@ class HeapTest: HeapHostBase<SizeType, alignmentBits, false> {
 
 	void* alloc(unsigned int size, bool shouldFail = false) {
 		auto ret = heap->alloc(size);
-		CHECK(ret.failed() == shouldFail);
+		CHECK((ret == nullptr) == shouldFail);
 
 		static constexpr uintptr_t mask = (1 << alignmentBits) - 1;
 		uintptr_t lowBits = (((uintptr_t)ret) & mask);
