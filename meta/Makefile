@@ -2,8 +2,6 @@ OUTPUT = pet-meta-test
 
 # Library sources
 
-SOURCES += ../../1test/TestRunner.cpp
-SOURCES += ../../1test/FailureInjector.cpp
 # Test code
 
 SOURCES += TestGroups.cpp
@@ -23,7 +21,7 @@ INCLUDE_DIRS += ../..
 
 # Flags
 
-CXXFLAGS += -std=c++11								# Use the c++ standard released in 2011
+CXXFLAGS += -std=c++17								# Use the c++ standard released in 2017
 CXXFLAGS += -O0 									# Avoid optimizer screwing up coverage data
 CXXFLAGS += -g3										# Include all available debug info
 CXXFLAGS += -fno-inline								# Do not inline (coverage again)
@@ -37,4 +35,5 @@ LIBS += gcov
 
 LD=$(CXX) 
 
+include ../../mod.mk
 include ../ultimate-makefile/Makefile.ultimate	
