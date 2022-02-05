@@ -21,6 +21,7 @@ SOURCES += TestDataDoubleList.cpp
 SOURCES += TestDataLinkedList.cpp
 SOURCES += TestDataLinkedListSpecial.cpp
 SOURCES += TestDataLinRegFilter.cpp
+SOURCES += TestDataMaybe.cpp
 SOURCES += TestDataMedianFilter.cpp
 SOURCES += TestDataMutableStorage.cpp
 SOURCES += TestDataPriorityQueue.cpp
