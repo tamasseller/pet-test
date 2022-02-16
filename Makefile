@@ -54,7 +54,6 @@ SOURCES += TestHeapHost5.cpp
 SOURCES += TestHeapStress.cpp
 SOURCES += TestUbiqTrace.cpp
 
-
 # Test support
 
 SOURCES += ../1test/TestRunnerExperimental.cpp

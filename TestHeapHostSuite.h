@@ -64,7 +64,7 @@ public:
 		}
 	}
 
-	typename Base::Block findAndRemove(unsigned int size)
+	typename Base::Block findAndRemove(unsigned int size, bool hot)
 	{
 		MOCK(HeapPolicy)::CALL(findAndRemove);
 
@@ -86,7 +86,7 @@ public:
 	}
 };
 
-template<class SizeType, unsigned int alignmentBits, unsigned int spare, bool useChecksum>
+template<class SizeType, unsigned int alignmentBits, unsigned int spare, bool useChecksum, bool hot>
 struct HeapTest
 {
 	class Uut: public Heap<MockPolicy<SizeType, spare>, SizeType, alignmentBits, useChecksum>
@@ -106,9 +106,9 @@ struct HeapTest
 		TEST_SETUP() { heap = new Uut; }
 		TEST_TEARDOWN() { delete heap; }
 
-		void* alloc(uintptr_t size, bool shouldFail = false)
+		void* alloc(uintptr_t size, bool shouldFail = false, bool isHot = hot)
 		{
-			auto ret = heap->alloc(size);
+			auto ret = heap->alloc(size, isHot);
 
 			CHECK((ret == nullptr) == shouldFail);
 			CHECK(!(((uintptr_t)ret) & ~(-1u << alignmentBits)));
@@ -167,8 +167,16 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(100, 1));
 
-		MOCK(HeapPolicy)::EXPECT(remove);
-		MOCK(HeapPolicy)::EXPECT(add);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+
 		this->heap->free(r);
 
 		CHECK(this->checkStatsEmpty());
@@ -228,8 +236,16 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(4, 1));
 
-		MOCK(HeapPolicy)::EXPECT(remove);
-		MOCK(HeapPolicy)::EXPECT(add);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+
 		this->heap->free(r);
 
 		CHECK(this->checkStatsEmpty());
@@ -294,7 +310,16 @@ struct HeapTest
 
 		CHECK(this->checkStatsMultipleFree(2 * 4, 2));
 
-		MOCK(HeapPolicy)::EXPECT(update);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+
 		this->heap->free(r2);
 
 		CHECK(this->checkStatsMultipleFree(4, 1));
@@ -329,8 +354,16 @@ struct HeapTest
 
 		CHECK(this->checkStatsMultipleFree(2 * 4, 2));
 
-		MOCK(HeapPolicy)::EXPECT(remove);
-		MOCK(HeapPolicy)::EXPECT(add);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+
 		this->heap->free(r);
 
 		CHECK(this->checkStatsMultipleFree(4, 1));
@@ -423,7 +456,16 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(s.longestFree, 1));
 
-		MOCK(HeapPolicy)::EXPECT(update);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+
 		this->heap->free(r2);
 
 		CHECK(this->checkStatsEmpty());
@@ -439,12 +481,23 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(1000, 1));
 
-		MOCK(HeapPolicy)::EXPECT(remove);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+		}
+
 		MOCK(HeapPolicy)::EXPECT(add);
 		auto newSize = this->heap->resize(r, 100);
 		CHECK(100 <= newSize && newSize < 1000);
 
-		CHECK(this->checkStatsOneFree(100, 1));
+		if(hot)
+		{
+			CHECK(this->checkStatsOneFree(100, 1));
+		}
+		else
+		{
+			CHECK(this->checkStatsMultipleFree(100, 1));
+		}
 	}
 	END_TEST_CASE()
 
@@ -515,12 +568,24 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(100, 1));
 
-		MOCK(HeapPolicy)::EXPECT(remove);
-		MOCK(HeapPolicy)::EXPECT(add);
-		auto newSize = this->heap->resize(r, 1000);
-		CHECK(1000 <= newSize);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
 
-		CHECK(this->checkStatsOneFree(1000, 1));
+		auto newSize = this->heap->resize(r, 1000);
+
+		if(hot)
+		{
+			CHECK(1000 <= newSize);
+			CHECK(this->checkStatsOneFree(1000, 1));
+		}
+		else
+		{
+			CHECK(100 <= newSize && newSize < 1000);
+			CHECK(this->checkStatsOneFree(100, 1));
+		}
 	}
 	END_TEST_CASE()
 
@@ -630,11 +695,26 @@ struct HeapTest
 		MOCK(HeapPolicy)::disable();
 
 		auto newSize = this->heap->resize(r, 110);
-		CHECK(110 <= newSize);
+
+		if(hot)
+		{
+			CHECK(110 <= newSize);
+		}
+		else
+		{
+			CHECK(100 <= newSize);
+		}
 
 		MOCK(HeapPolicy)::enable();
 
-		CHECK(this->checkStatsOneFree(110 + 100, 2) || this->checkStatsMultipleFree(110 + 100, 2));
+		if(hot)
+		{
+			CHECK(this->checkStatsOneFree(110 + 100, 2) || this->checkStatsMultipleFree(110 + 100, 2));
+		}
+		else
+		{
+			CHECK(this->checkStatsMultipleFree(100 + 100, 2));
+		}
 	}
 	END_TEST_CASE()
 
@@ -647,11 +727,26 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(100, 1));
 
-		MOCK(HeapPolicy)::EXPECT(add);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
+
 		auto r2 = this->heap->dropFront(r, 50);
 		CHECK(r <= r2 && r2 <= ((char*)r + 50));
 
-		CHECK(this->checkStatsMultipleFree(50, 1));
+		if(hot)
+		{
+			CHECK(this->checkStatsMultipleFree(50, 1));
+		}
+		else
+		{
+			CHECK(this->checkStatsOneFree(50, 1));
+		}
 	}
 	END_TEST_CASE()
 
@@ -680,7 +775,14 @@ struct HeapTest
 
 		CHECK(this->checkStatsOneFree(100, 1));
 
-		MOCK(HeapPolicy)::EXPECT(add);
+		if(hot)
+		{
+			MOCK(HeapPolicy)::EXPECT(add);
+		}
+		else
+		{
+			MOCK(HeapPolicy)::EXPECT(update);
+		}
 		auto r2 = this->heap->dropFront(r, 100);
 		CHECK(r < r2 && r2 < (char*)r + 100);
 
@@ -758,11 +860,95 @@ struct HeapTest
 
 		CHECK(this->checkStatsMultipleFree(100, 1));
 
+		MOCK(HeapPolicy)::EXPECT(update);
 		static constexpr auto offs = 1 << alignmentBits;
 		auto r2 = this->heap->dropFront(r, offs);
 		CHECK(r < r2 && r2 <= ((char*)r + offs));
 
 		CHECK(this->checkStatsMultipleFree(100 - offs, 1));
+	}
+	END_TEST_CASE()
+
+	BEGIN_TEST_CASE(HeapHost, MixedHotCold)
+	{
+		MOCK(HeapPolicy)::EXPECT(findAndRemove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto h1 = this->alloc(100, false, true);
+
+		MOCK(HeapPolicy)::EXPECT(findAndRemove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto h2 = this->alloc(100, false, true);
+
+		MOCK(HeapPolicy)::EXPECT(findAndRemove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto c1 = this->alloc(100, false, false);
+
+		MOCK(HeapPolicy)::EXPECT(findAndRemove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto c2 = this->alloc(100, false, false);
+
+		CHECK(this->checkStatsOneFree(4 * 100, 4));
+
+		MOCK(HeapPolicy)::EXPECT(add);
+		this->heap->free(c1);
+
+		CHECK(this->checkStatsMultipleFree(3 * 100, 3));
+
+		MOCK(HeapPolicy)::EXPECT(add);
+		this->heap->free(h1);
+
+		CHECK(this->checkStatsMultipleFree(2 * 100, 2));
+
+		MOCK(HeapPolicy)::EXPECT(remove);
+		MOCK(HeapPolicy)::EXPECT(update);
+		this->heap->free(c2);
+
+		CHECK(this->checkStatsMultipleFree(1 * 100, 1));
+
+		MOCK(HeapPolicy)::EXPECT(remove);
+		MOCK(HeapPolicy)::EXPECT(update);
+		this->heap->free(h2);
+
+		CHECK(this->checkStatsEmpty());
+	}
+	END_TEST_CASE()
+
+	BEGIN_TEST_CASE(HeapHost, Crawl)
+	{
+		MOCK(HeapPolicy)::EXPECT(findAndRemove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto h0 = this->alloc(100, false, true);
+
+		CHECK(this->checkStatsOneFree(100, 1));
+
+		MOCK(HeapPolicy)::EXPECT(remove);
+		MOCK(HeapPolicy)::EXPECT(add);
+		CHECK(300 <= this->heap->resize(h0, 300));
+
+		CHECK(this->checkStatsOneFree(300, 1));
+
+		MOCK(HeapPolicy)::EXPECT(add);
+		auto h1 = this->heap->dropFront(h0, 200);
+		CHECK(h0 < h1 && h1 <= (char*)h0 + 200);
+
+		CHECK(this->checkStatsMultipleFree(100, 1));
+
+		for(int i = 0; i < (this->heap->size - 100) / 200 - 1; i++)
+		{
+			MOCK(HeapPolicy)::EXPECT(remove);
+			MOCK(HeapPolicy)::EXPECT(add);
+			CHECK(300 <= this->heap->resize(h1, 300));
+
+			CHECK(this->checkStatsMultipleFree(300, 1));
+
+			MOCK(HeapPolicy)::EXPECT(update);
+			auto h2 = this->heap->dropFront(h1, 200);
+			CHECK(h1 < h2 && h2 <= (char*)h1 + 200);
+
+			CHECK(this->checkStatsMultipleFree(100, 1));
+
+			h1 = h2;
+		}
 	}
 	END_TEST_CASE()
 };

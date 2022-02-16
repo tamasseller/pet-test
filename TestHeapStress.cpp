@@ -27,6 +27,10 @@
 
 using namespace pet;
 
-template class HeapStress<AvlHeap<uint32_t, 2, true> , 512*1024, 64, 0, 4096>;
-template class HeapStress<BestFitHeap<uint32_t, 2, true>, 512*1024, 64, 0, 4096>;
-template class HeapStress<TlsfHeap<uint32_t, 2, true>, 256*1024, 64, 0, 4096>;
+template class HeapStress<AvlHeap<uint32_t, 2, true> , 512*1024, 64, 0, 4096, false>;
+template class HeapStress<BestFitHeap<uint32_t, 2, true>, 512*1024, 64, 0, 4096, false>;
+template class HeapStress<TlsfHeap<uint32_t, 2, true>, 256*1024, 64, 0, 4096, false>;
+
+template class HeapStress<AvlHeap<uint32_t, 2, true> , 512*1024, 64, 0, 4096, true>;
+template class HeapStress<BestFitHeap<uint32_t, 2, true>, 512*1024, 64, 0, 4096, true>;
+template class HeapStress<TlsfHeap<uint32_t, 2, true>, 256*1024, 64, 0, 4096, true>;

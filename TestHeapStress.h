@@ -29,7 +29,7 @@ using namespace pet;
 
 class HeapStressTestTraceTag;
 
-template <class Heap, unsigned int heapSize, unsigned int rounds, unsigned int minAlloc, unsigned int maxAlloc>
+template <class Heap, unsigned int heapSize, unsigned int rounds, unsigned int minAlloc, unsigned int maxAlloc, bool hot>
 class HeapStress: pet::Trace<HeapStressTestTraceTag>
 {
 	TEST_GROUP(HeapStress)
@@ -96,7 +96,7 @@ class HeapStress: pet::Trace<HeapStressTestTraceTag>
 			{
 				unsigned int blockSize = random(minAlloc, maxAlloc);
 
-				auto ptr = heap.alloc(blockSize);
+				auto ptr = heap.alloc(blockSize, hot);
 
 				heap.getStats(heap.data);
 

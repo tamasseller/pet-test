@@ -19,11 +19,11 @@
 
 #include "TestHeapHostSuite.h"
 
-template class HeapTest<uint16_t, 1, 4, false>;
-template class HeapTest<uint16_t, 2, 4, false>;
-template class HeapTest<uint16_t, 3, 4, false>;
-template class HeapTest<uint16_t, 4, 4, false>;
+template class HeapTest<uint16_t, 1, 4, false, true>;
+template class HeapTest<uint16_t, 2, 4, false, false>;
+template class HeapTest<uint16_t, 3, 4, false, true>;
+template class HeapTest<uint16_t, 4, 4, false, false>;
 
-template class HeapTest<uint32_t, 2, 4, false>;
-template class HeapTest<uint32_t, 3, 4, false>;
-template class HeapTest<uint32_t, 4, 4, false>;
+template class HeapTest<uint32_t, 2, 4, false, true>;
+template class HeapTest<uint32_t, 3, 4, false, false>;
+template class HeapTest<uint32_t, 4, 4, false, true>;
