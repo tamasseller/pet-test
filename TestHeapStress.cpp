@@ -19,22 +19,14 @@
 
 #include "1test/Test.h"
 
-#include "heap/Heap.h"
+#include "heap/AvlTreePolicy.h"
+#include "heap/BestFitPolicy.h"
 #include "heap/TlsfPolicy.h"
-
-using namespace pet;
 
 #include "TestHeapStress.h"
 
-TEST_GROUP(TlsfStress) {
-	HeapStress<TlsfHeap<uint32_t, 2, true>, 256*1024, 64, 0, 4096> test;
-};
+using namespace pet;
 
-TEST(TlsfStress, AllocFree) {
-	test.allocFreeTests();
-}
-
-TEST(TlsfStress, AllocShrinkFree) {
-	test.allocShrinkFreeTests();
-}
-
+template class HeapStress<AvlHeap<uint32_t, 2, true> , 512*1024, 64, 0, 4096>;
+template class HeapStress<BestFitHeap<uint32_t, 2, true>, 512*1024, 64, 0, 4096>;
+template class HeapStress<TlsfHeap<uint32_t, 2, true>, 256*1024, 64, 0, 4096>;

@@ -44,17 +44,14 @@ SOURCES += TestMetaTuple.cpp
 SOURCES += TestMetaTypePackInfo.cpp
 SOURCES += TestPlatformAtomic.cpp
 SOURCES += TestUbiqDelegate.cpp
-SOURCES += TestHeapAvlStress.cpp
-SOURCES += TestHeapBestFitStress.cpp
+SOURCES += TestHeapTlsf.cpp
+SOURCES += TestHeapBuddy.cpp
 SOURCES += TestHeapHost1.cpp
 SOURCES += TestHeapHost2.cpp
 SOURCES += TestHeapHost3.cpp
 SOURCES += TestHeapHost4.cpp
 SOURCES += TestHeapHost5.cpp
-SOURCES += TestHeapHost6.cpp
-SOURCES += TestHeapTlsf.cpp
-SOURCES += TestHeapTlsfStress.cpp
-SOURCES += TestHeapBuddy.cpp
+SOURCES += TestHeapStress.cpp
 SOURCES += TestUbiqTrace.cpp
 
 

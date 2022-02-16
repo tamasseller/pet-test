@@ -101,11 +101,11 @@ struct MetaTestOutput: public TestOutput
 
 	std::list<FailureRecord> failures;
 
-	virtual void reportProgress() {
+	virtual void reportProgress() override {
 		progress++;
 	}
 
-	virtual void reportTestFailure(bool isSynthetic, const char* testName, const char* sourceInfo, const char *failureSourceInfo, const char* text)
+	virtual void reportTestFailure(uint32_t rerunId, const char* testName, const char* sourceInfo, const char *failureSourceInfo, const char* text) override
 	{
 	    FailureRecord record(testName, sourceInfo, failureSourceInfo, text);
 
@@ -115,7 +115,7 @@ struct MetaTestOutput: public TestOutput
         failures.push_back(record);
 	}
 
-	virtual void reportFinal(uint32_t normal, uint32_t failure, uint32_t synthetic)
+	virtual void reportFinal(uint32_t normal, uint32_t failure, uint32_t synthetic) override
 	{
 		this->normal = normal;
 		this->failed = failure;

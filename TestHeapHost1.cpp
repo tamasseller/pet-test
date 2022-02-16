@@ -17,9 +17,14 @@
  *
  *******************************************************************************/
 
-#include "TestHeapHost0.h"
+#include "TestHeapHostSuite.h"
 
-TEST_TEMPLATE(uint16_t, 2, 17)
-TEST_TEMPLATE(uint16_t, 2, 16)
-TEST_TEMPLATE(uint16_t, 2, 15)
-TEST_TEMPLATE(uint16_t, 2, 9)
+template class HeapTest<uint16_t, 1, 16, true>;
+template class HeapTest<uint16_t, 2, 16, true>;
+template class HeapTest<uint16_t, 3, 16, true>;
+template class HeapTest<uint16_t, 4, 16, true>;
+
+template class HeapTest<uint32_t, 2, 16, true>;
+template class HeapTest<uint32_t, 3, 16, true>;
+template class HeapTest<uint32_t, 4, 16, true>;
+

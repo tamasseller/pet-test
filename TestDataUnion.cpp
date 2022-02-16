@@ -60,7 +60,7 @@ TEST(Union, Simple) {
     CHECK(*u.accessAs<int>() == 1);
     CHECK(u.accessAs<char>() == nullptr);
 
-    u.initAs<const short>(2);
+    u.initAs<const short>((short)2);
     const short *x = u.accessAs<const short>();
     CHECK(*x == 2);
     CHECK(u.accessAs<int>() == nullptr);

@@ -24,15 +24,17 @@
 
 using namespace pet;
 
-typedef TlsfPolicy<uint32_t, 2> Policy;
-typedef Heap<Policy, uint32_t, 2> TestHeap;
+using Policy = TlsfPolicy<uint32_t> ;
+using TestHeap = Heap<Policy, uint32_t, 2>;
 
-class HeapInternalsTest: private TestHeap::Block {
+class HeapInternalsTest: private TestHeap::Block
+{
 public:
 	using TestHeap::Block::headerSize;
 };
 
-class TlsfPolicyInternalsTest {
+class TlsfPolicyInternalsTest
+{
 public:
 	using Index = Policy::Index;
 
@@ -116,7 +118,8 @@ public:
 		CHECK(m137.fl == 4  && m137.sl == 1 );
 	}
 
-	static void indexLookup() {
+	static void indexLookup()
+	{
 		Index index;
 		Index::Entry s1 = Index::getInsertionEntry(0x1);
 		Index::Entry s2 = Index::getInsertionEntry(0x11);
@@ -156,14 +159,17 @@ public:
 	}
 };
 
-TEST_GROUP(TestHeap) {
-	struct Uut: HeapBase<uint32_t, 2> {
+TEST_GROUP(TestTlsfHeap)
+{
+	struct Uut: HeapBase<uint32_t>
+	{
 		constexpr static unsigned int usedBlockHeaderSize = HeapInternalsTest::headerSize;
 		unsigned int data[256*256*8/sizeof(unsigned int)];
 		TestHeap heap;
 		Uut():heap(data, sizeof(data)) {}
 
-		void *alloc(unsigned int size, bool shouldFail = false) {
+		void *alloc(unsigned int size, bool shouldFail = false)
+		{
 			auto ret = heap.alloc(size);
 			CHECK((ret == nullptr) == shouldFail);
 			return ret;
@@ -173,25 +179,29 @@ TEST_GROUP(TestHeap) {
 	Uut uut;
 };
 
-TEST(TestHeap, IndexMapping) {
+TEST(TestTlsfHeap, IndexMapping)
+{
 	TlsfPolicyInternalsTest::indexMapping();
 }
 
-TEST(TestHeap, IndexLookup) {
+TEST(TestTlsfHeap, IndexLookup)
+{
 	TlsfPolicyInternalsTest::indexLookup();
 }
 
-TEST(TestHeap, AllocSanity) {
+TEST(TestTlsfHeap, AllocSanity)
+{
 	uut.alloc(1);
 }
 
-TEST(TestHeap, Deplete) {
+TEST(TestTlsfHeap, Deplete)
+{
 	uut.alloc(sizeof(Uut::data)/2+1);
 	uut.alloc(sizeof(Uut::data)/2+1, true);
 }
 
-
-TEST(TestHeap, AllocTest1) {
+TEST(TestTlsfHeap, AllocTest1)
+{
 	void* d[5];
 	d[0] = uut.alloc(16);
 	d[1] = uut.alloc(32);
@@ -210,9 +220,13 @@ TEST(TestHeap, AllocTest1) {
 	uut.heap.free(d[2]);
 	uut.heap.free(d[3]);
 	uut.heap.free(d[4]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, AllocTest2) {
+TEST(TestTlsfHeap, AllocTest2)
+{
 	void *d[2];
 
 	d[0] = uut.alloc(56);
@@ -222,9 +236,13 @@ TEST(TestHeap, AllocTest2) {
 
 	uut.heap.free(d[0]);
 	uut.heap.free(d[1]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, AllocTest3) {
+TEST(TestTlsfHeap, AllocTest3)
+{
 	void *d[4];
 
 	d[0] = uut.alloc(0x1020 - Uut::usedBlockHeaderSize);
@@ -243,9 +261,12 @@ TEST(TestHeap, AllocTest3) {
 	uut.heap.free(d[2]);
 	uut.heap.free(d[3]);
 
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, AllocTest4) {
+TEST(TestTlsfHeap, AllocTest4)
+{
 	void *d[4];
 
 	d[0] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
@@ -260,10 +281,15 @@ TEST(TestHeap, AllocTest4) {
 	uut.heap.free(d[0]);
 	uut.heap.free(d[1]);
 	uut.heap.free(d[3]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, FreeTest1) {
+TEST(TestTlsfHeap, FreeTest1)
+{
 	void *d[5];
+
 	d[0] = uut.alloc(0x0010);
 	d[1] = uut.alloc(0x1000);
 	d[2] = uut.alloc(0x0010);
@@ -273,9 +299,13 @@ TEST(TestHeap, FreeTest1) {
 	uut.heap.free(d[1]);
 	uut.heap.free(d[2]);
 	uut.heap.free(d[3]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, FreeTest2) {
+TEST(TestTlsfHeap, FreeTest2)
+{
 	void *d[7];
 
 	d[0] = uut.alloc(0x0100);
@@ -298,24 +328,32 @@ TEST(TestHeap, FreeTest2) {
 	uut.heap.free(d[2]);
 	uut.heap.free(d[3]);
 	uut.heap.free(d[6]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, ShrinkTest1) {
+TEST(TestTlsfHeap, ShrinkTest1)
+{
 	void *d[5];
 	d[0] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
 	d[1] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
 	d[2] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
 
-	uut.heap.shrink(d[0], 0x800 - Uut::usedBlockHeaderSize);
-	uut.heap.shrink(d[1], 0xFFF - Uut::usedBlockHeaderSize);
-	uut.heap.shrink(d[2], 1);
+	uut.heap.resize(d[0], 0x800 - Uut::usedBlockHeaderSize);
+	uut.heap.resize(d[1], 0xFFF - Uut::usedBlockHeaderSize);
+	uut.heap.resize(d[2], 1);
 
 	uut.heap.free(d[0]);
 	uut.heap.free(d[1]);
 	uut.heap.free(d[2]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, ShrinkTest2) {
+TEST(TestTlsfHeap, ShrinkTest2)
+{
 	void *d[4];
 
 	d[0] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
@@ -326,13 +364,17 @@ TEST(TestHeap, ShrinkTest2) {
 	uut.heap.free(d[0]);
 	uut.heap.free(d[2]);
 
-	uut.heap.shrink(d[1], 0x800 - Uut::usedBlockHeaderSize);
+	uut.heap.resize(d[1], 0x800 - Uut::usedBlockHeaderSize);
 
 	uut.heap.free(d[1]);
 	uut.heap.free(d[3]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
 
-TEST(TestHeap, ShrinkTest3) {
+TEST(TestTlsfHeap, ShrinkTest3)
+{
 	void *d[4];
 	d[0] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
 	d[1] = uut.alloc(0x1000 - Uut::usedBlockHeaderSize);
@@ -342,8 +384,11 @@ TEST(TestHeap, ShrinkTest3) {
 	uut.heap.free(d[2]);
 	uut.heap.free(d[0]);
 
-	uut.heap.shrink(d[1], 0x800 - Uut::usedBlockHeaderSize);
+	uut.heap.resize(d[1], 0x800 - Uut::usedBlockHeaderSize);
 
 	uut.heap.free(d[1]);
 	uut.heap.free(d[3]);
+
+	auto s = uut.heap.getStats(uut.data);
+	CHECK(s.nUsed == 0 && s.totalUsed == 0);
 }
