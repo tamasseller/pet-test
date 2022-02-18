@@ -29,80 +29,80 @@ class MockAllocatorTrace: public pet::Trace<MockAllocatorTrace> {};
 
 struct Allocator
 {
-	static inline unsigned int count;
+    static inline unsigned int count;
 
-	static void* alloc(unsigned int s) {
-		void *ret = malloc(s);
-		count++;
+    static void* alloc(unsigned int s) {
+        void *ret = malloc(s);
+        count++;
 
-		MockAllocatorTrace::info() << "alloc   " << s << " -> " << ret << "\n";
+        MockAllocatorTrace::info() << "alloc   " << s << " -> " << ret << "\n";
 
-		return ret;
-	}
+        return ret;
+    }
 
-	template<class T>
-	static void* allocFor() {
-		return alloc(sizeof(T));
-	}
+    template<class T>
+    static void* allocFor() {
+        return alloc(sizeof(T));
+    }
 
-	static void free(void* p) {
-		count--;
+    static void free(void* p) {
+        count--;
 
-		MockAllocatorTrace::info() << "free   " << p << "\n";
+        MockAllocatorTrace::info() << "free   " << p << "\n";
 
-		return ::free(p);
-	}
+        return ::free(p);
+    }
 
-	static unsigned int shrink(void* p, unsigned int s) {
-		MockAllocatorTrace::info() << "shrink " << p << " to " << s << "\n";
-		return s;
-	}
+    static unsigned int shrink(void* p, unsigned int s) {
+        MockAllocatorTrace::info() << "shrink " << p << " to " << s << "\n";
+        return s;
+    }
 
-	static bool allFreed() {
-	    bool ret = count == 0;
-	    count = 0;
-		return ret;
-	}
+    static bool allFreed() {
+        bool ret = count == 0;
+        count = 0;
+        return ret;
+    }
 
-	struct ReferenceTracer
-	{
-		virtual void acquistion(void* refLoc, void* trg) = 0;
-		virtual void release(void* refLoc, void* trg) = 0;
-		inline virtual ~ReferenceTracer() = default;
-	};
+    struct ReferenceTracer
+    {
+        virtual void acquistion(void* refLoc, void* trg) = 0;
+        virtual void release(void* refLoc, void* trg) = 0;
+        inline virtual ~ReferenceTracer() = default;
+    };
 
-	static inline ReferenceTracer* tracer;
-	static inline void traceReferenceAcquistion(void* refLoc, void* trg)
-	{
-		if(tracer)
-		{
-			tracer->acquistion(refLoc, trg);
-		}
-	}
+    static inline ReferenceTracer* tracer;
+    static inline void traceReferenceAcquistion(void* refLoc, void* trg)
+    {
+        if(tracer)
+        {
+            tracer->acquistion(refLoc, trg);
+        }
+    }
 
-	static inline void traceReferenceRelease(void* refLoc, void* trg)
-	{
-		if(tracer)
-		{
-			tracer->release(refLoc, trg);
-		}
-	}
+    static inline void traceReferenceRelease(void* refLoc, void* trg)
+    {
+        if(tracer)
+        {
+            tracer->release(refLoc, trg);
+        }
+    }
 };
 
 struct FailableAllocator: public Allocator
 {
-	virtual const char* getFailureSourceName()
-	{
-		return "Allocator";
-	}
+    virtual const char* getFailureSourceName()
+    {
+        return "Allocator";
+    }
 
-	static void* alloc(unsigned int s)
-	{
-		if(pet::FailureInjector::shouldSimulateError())
-			return 0;
+    static void* alloc(unsigned int s)
+    {
+        if(pet::FailureInjector::shouldSimulateError())
+            return 0;
 
-		return Allocator::alloc(s);
-	}
+        return Allocator::alloc(s);
+    }
 };
 
 #endif /* MOCKALLOCATOR_H_ */

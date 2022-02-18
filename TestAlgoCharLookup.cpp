@@ -27,26 +27,26 @@ TEST_GROUP(CharLookupTable) {};
 
 TEST(CharLookupTable, OddEvent)
 {
-	CHECK(CharLookupTable<0, 2>::contains(0));
-	CHECK(!CharLookupTable<0, 2>::contains(1));
-	CHECK(CharLookupTable<0, 2>::contains(2));
-	CHECK(!CharLookupTable<0, 2>::contains(3));
+    CHECK(CharLookupTable<0, 2>::contains(0));
+    CHECK(!CharLookupTable<0, 2>::contains(1));
+    CHECK(CharLookupTable<0, 2>::contains(2));
+    CHECK(!CharLookupTable<0, 2>::contains(3));
 
-	CHECK(!CharLookupTable<1, 3>::contains(0));
-	CHECK(CharLookupTable<1, 3>::contains(1));
-	CHECK(!CharLookupTable<1, 3>::contains(2));
-	CHECK(CharLookupTable<1, 3>::contains(3));
+    CHECK(!CharLookupTable<1, 3>::contains(0));
+    CHECK(CharLookupTable<1, 3>::contains(1));
+    CHECK(!CharLookupTable<1, 3>::contains(2));
+    CHECK(CharLookupTable<1, 3>::contains(3));
 }
 
 TEST(CharLookupTable, FarLimits)
 {
-	CHECK(!CharLookupTable<1, 100>::contains(0));
-	CHECK(CharLookupTable<1, 100>::contains(1));
-	CHECK(!CharLookupTable<1, 100>::contains(2));
+    CHECK(!CharLookupTable<1, 100>::contains(0));
+    CHECK(CharLookupTable<1, 100>::contains(1));
+    CHECK(!CharLookupTable<1, 100>::contains(2));
 
-	CHECK(!CharLookupTable<1, 100>::contains(99));
-	CHECK(CharLookupTable<1, 100>::contains(100));
-	CHECK(!CharLookupTable<1, 100>::contains(101));
+    CHECK(!CharLookupTable<1, 100>::contains(99));
+    CHECK(CharLookupTable<1, 100>::contains(100));
+    CHECK(!CharLookupTable<1, 100>::contains(101));
 
-	CHECK(!CharLookupTable<1, 100>::contains(200));
+    CHECK(!CharLookupTable<1, 100>::contains(200));
 }

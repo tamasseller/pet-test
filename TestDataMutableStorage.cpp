@@ -26,60 +26,60 @@ using namespace pet;
 TEST_GROUP(MutableStorage) {};
 
 TEST(MutableStorage, Simple) {
-	typedef MutableStorage<int, char> Storage;
-	Storage storage;
+    typedef MutableStorage<int, char> Storage;
+    Storage storage;
 
-	int* x = storage.construct<int>(4);
-	CHECK(*x == 4);
+    int* x = storage.construct<int>(4);
+    CHECK(*x == 4);
 
-	CHECK(Storage::self(x) == &storage);
-	CHECK(storage.as<int>() == x);
+    CHECK(Storage::self(x) == &storage);
+    CHECK(storage.as<int>() == x);
 
-	storage.destroy<int>();
+    storage.destroy<int>();
 
-	char* y = storage.construct<char>('a');
-	CHECK(*y == 'a');
+    char* y = storage.construct<char>('a');
+    CHECK(*y == 'a');
 
-	CHECK(Storage::self(y) == &storage);
+    CHECK(Storage::self(y) == &storage);
 
-	storage.destroy<char>();
+    storage.destroy<char>();
 
 }
 
 namespace {
-	struct A {
-		static int c;
-		A() {c++;}
-		~A() {c--;}
-	};
+    struct A {
+        static int c;
+        A() {c++;}
+        ~A() {c--;}
+    };
 
-	int A::c = 0;
+    int A::c = 0;
 
-	struct B {
-		static int c;
-		B() {c++;}
-		~B() {c--;}
-	};
+    struct B {
+        static int c;
+        B() {c++;}
+        ~B() {c--;}
+    };
 
-	int B::c = 0;
+    int B::c = 0;
 }
 
 TEST(MutableStorage, CtorDtor) {
-	MutableStorage<A, B> storage;
+    MutableStorage<A, B> storage;
 
-	auto a = storage.construct<A>();
-	CHECK(A::c == 1);
+    auto a = storage.construct<A>();
+    CHECK(A::c == 1);
 
-	CHECK(storage.as<A>() == a);
+    CHECK(storage.as<A>() == a);
 
-	storage.destroy<A>();
-	CHECK(A::c == 0);
+    storage.destroy<A>();
+    CHECK(A::c == 0);
 
-	auto b = storage.construct<B>();
-	CHECK(B::c == 1);
+    auto b = storage.construct<B>();
+    CHECK(B::c == 1);
 
-	CHECK(storage.as<B>() == b);
+    CHECK(storage.as<B>() == b);
 
-	storage.destroy<B>();
-	CHECK(B::c == 0);
+    storage.destroy<B>();
+    CHECK(B::c == 0);
 }

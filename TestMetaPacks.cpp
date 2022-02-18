@@ -26,27 +26,27 @@ using namespace pet;
 TEST_GROUP(LastOf) {};
 
 TEST(LastOf, Single) {
-	CHECK(sizeof(lastOf<int>) == sizeof(int));
+    CHECK(sizeof(lastOf<int>) == sizeof(int));
 }
 
 TEST(LastOf, Multiple) {
-	CHECK(sizeof(lastOf<int, short, char>) == sizeof(char));
+    CHECK(sizeof(lastOf<int, short, char>) == sizeof(char));
 }
 
 TEST(LastOf, MultipleSame) {
-	CHECK(sizeof(lastOf<int, short, int>) == sizeof(int));
+    CHECK(sizeof(lastOf<int, short, int>) == sizeof(int));
 }
 
 TEST_GROUP(FirstOf) {};
 
 TEST(FirstOf, Single) {
-	CHECK(sizeof(firstOf<int>) == sizeof(int));
+    CHECK(sizeof(firstOf<int>) == sizeof(int));
 }
 
 TEST(FirstOf, Multiple) {
-	CHECK(sizeof(firstOf<char, short, int>) == sizeof(char));
+    CHECK(sizeof(firstOf<char, short, int>) == sizeof(char));
 }
 
 TEST(FirstOf, MultipleSame) {
-	CHECK(sizeof(firstOf<int, short, int>) == sizeof(int));
+    CHECK(sizeof(firstOf<int, short, int>) == sizeof(int));
 }

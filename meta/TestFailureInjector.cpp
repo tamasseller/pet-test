@@ -26,7 +26,7 @@ static int counter = 0;
 
 TEST_GROUP(FailureInjector)
 {
-	int x = 0;
+    int x = 0;
 };
 
 TEST(FailureInjector, Sanity)
@@ -58,7 +58,7 @@ TEST(FailureInjector, CheckAlways)
 
 TEST(FailureInjector, OnOff)
 {
-	FailureInjector::disable();
+    FailureInjector::disable();
     FailureInjector::shouldSimulateError();
 
     FailureInjector::enable();
@@ -70,34 +70,34 @@ TEST(FailureInjector, OnOff)
 
 TEST(FailureInjector, Reinit)
 {
-	CHECK_ALWAYS(x==0);
-	x = 1;
-	FailureInjector::shouldSimulateError();
+    CHECK_ALWAYS(x==0);
+    x = 1;
+    FailureInjector::shouldSimulateError();
 }
 
 TEST(FailureInjector, Mock)
 {
     if(FailureInjector::shouldSimulateError())
-    	MOCK(FailureInjector)::CALL(unexpected);
+        MOCK(FailureInjector)::CALL(unexpected);
 }
 
 TEST(FailureInjector, MockAlways)
 {
     if(FailureInjector::shouldSimulateError())
-    	MOCK(FailureInjector)::CALL_ALWAYS(unexpected);
+        MOCK(FailureInjector)::CALL_ALWAYS(unexpected);
 }
 
 
 TEST_GROUP(FailureInjectorCleanup)
 {
-	struct Y {
-		Y() {counter++;}
-		~Y() {counter--;}
-	} y;
+    struct Y {
+        Y() {counter++;}
+        ~Y() {counter--;}
+    } y;
 };
 
 TEST(FailureInjectorCleanup, Destroy)
 {
-	CHECK_ALWAYS(counter==1);
-	FailureInjector::shouldSimulateError();
+    CHECK_ALWAYS(counter==1);
+    FailureInjector::shouldSimulateError();
 }

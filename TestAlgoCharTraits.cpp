@@ -25,182 +25,182 @@ using namespace pet;
 
 TEST_GROUP(CharTraits)
 {
-	template<class P>
-	void test(bool (*f)(char), P&& p)
-	{
-		char c = 0;
-		do
-		{
-			bool expected = p(c);
-			CHECK(f(c) == expected);
-		}
-		while(++c);
-	}
+    template<class P>
+    void test(bool (*f)(char), P&& p)
+    {
+        char c = 0;
+        do
+        {
+            bool expected = p(c);
+            CHECK(f(c) == expected);
+        }
+        while(++c);
+    }
 };
 
 TEST(CharTraits, WhiteSpace)
 {
-	test(&CharTraits::isSpace, [](char c)
-	{
-		return 	c == ' '
-			||	c == '\t'
-			||	c == '\r'
-			||	c == '\n';
-	});
+    test(&CharTraits::isSpace, [](char c)
+    {
+        return 	c == ' '
+            ||	c == '\t'
+            ||	c == '\r'
+            ||	c == '\n';
+    });
 }
 
 TEST(CharTraits, Operator)
 {
-	test(&CharTraits::isOperator, [](char c)
-	{
-		return c == '+'
-			|| c == '-'
-			|| c == '*'
-			|| c == '/'
-			|| c == '%'
-			|| c == '<'
-			|| c == '>'
-			|| c == '='
-			|| c == '|'
-			|| c == '&'
-			|| c == '^'
-			|| c == '~'
-			|| c == '!';
-	});
+    test(&CharTraits::isOperator, [](char c)
+    {
+        return c == '+'
+            || c == '-'
+            || c == '*'
+            || c == '/'
+            || c == '%'
+            || c == '<'
+            || c == '>'
+            || c == '='
+            || c == '|'
+            || c == '&'
+            || c == '^'
+            || c == '~'
+            || c == '!';
+    });
 }
 
 TEST(CharTraits, UpperCase)
 {
-	test(&CharTraits::isUpper, [](char c)
-	{
-		return 'A' <= c && c <= 'Z';
-	});
+    test(&CharTraits::isUpper, [](char c)
+    {
+        return 'A' <= c && c <= 'Z';
+    });
 }
 
 TEST(CharTraits, LowerCase)
 {
-	test(&CharTraits::isLower, [](char c)
-	{
-		return 'a' <= c && c <= 'z';
-	});
+    test(&CharTraits::isLower, [](char c)
+    {
+        return 'a' <= c && c <= 'z';
+    });
 }
 
 TEST(CharTraits, Alpha)
 {
-	test(&CharTraits::isAlpha, [](char c)
-	{
-		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
-	});
+    test(&CharTraits::isAlpha, [](char c)
+    {
+        return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
+    });
 }
 
 TEST(CharTraits, IdInitial)
 {
-	test(&CharTraits::isIdInitial, [](char c)
-	{
-		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_';
-	});
+    test(&CharTraits::isIdInitial, [](char c)
+    {
+        return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_';
+    });
 }
 
 TEST(CharTraits, Digit)
 {
-	test(&CharTraits::isDigit, [](char c)
-	{
-		return '0' <= c && c <= '9';
-	});
+    test(&CharTraits::isDigit, [](char c)
+    {
+        return '0' <= c && c <= '9';
+    });
 }
 
 TEST(CharTraits, IdInternal)
 {
-	test(&CharTraits::isIdInternal, [](char c)
-	{
-		return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_' || ('0' <= c && c <= '9');
-	});
+    test(&CharTraits::isIdInternal, [](char c)
+    {
+        return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || c == '_' || ('0' <= c && c <= '9');
+    });
 }
 
 TEST(CharTraits, Comma)
 {
-	test(&CharTraits::isComma, [](char c)
-	{
-		return c == ',';
-	});
+    test(&CharTraits::isComma, [](char c)
+    {
+        return c == ',';
+    });
 }
 
 TEST(CharTraits, Dot)
 {
-	test(&CharTraits::isDot, [](char c)
-	{
-		return c == '.';
-	});
+    test(&CharTraits::isDot, [](char c)
+    {
+        return c == '.';
+    });
 }
 
 TEST(CharTraits, DoubleQuote)
 {
-	test(&CharTraits::isDoubleQuote, [](char c)
-	{
-		return c == '"';
-	});
+    test(&CharTraits::isDoubleQuote, [](char c)
+    {
+        return c == '"';
+    });
 }
 
 TEST(CharTraits, SingleQuote)
 {
-	test(&CharTraits::isSingleQuote, [](char c)
-	{
-		return c == '\'';
-	});
+    test(&CharTraits::isSingleQuote, [](char c)
+    {
+        return c == '\'';
+    });
 }
 
 TEST(CharTraits, OpenParen)
 {
-	test(&CharTraits::isOpenParen, [](char c)
-	{
-		return c == '(';
-	});
+    test(&CharTraits::isOpenParen, [](char c)
+    {
+        return c == '(';
+    });
 }
 
 TEST(CharTraits, CloseParen)
 {
-	test(&CharTraits::isCloseParen, [](char c)
-	{
-		return c == ')';
-	});
+    test(&CharTraits::isCloseParen, [](char c)
+    {
+        return c == ')';
+    });
 }
 
 TEST(CharTraits, OpenCurly)
 {
-	test(&CharTraits::isOpenCurly, [](char c)
-	{
-		return c == '{';
-	});
+    test(&CharTraits::isOpenCurly, [](char c)
+    {
+        return c == '{';
+    });
 }
 
 TEST(CharTraits, CloseCurly)
 {
-	test(&CharTraits::isCloseCurly, [](char c)
-	{
-		return c == '}';
-	});
+    test(&CharTraits::isCloseCurly, [](char c)
+    {
+        return c == '}';
+    });
 }
 
 TEST(CharTraits, OpenBox)
 {
-	test(&CharTraits::isOpenBox, [](char c)
-	{
-		return c == '[';
-	});
+    test(&CharTraits::isOpenBox, [](char c)
+    {
+        return c == '[';
+    });
 }
 
 TEST(CharTraits, CloseBox)
 {
-	test(&CharTraits::isCloseBox, [](char c)
-	{
-		return c == ']';
-	});
+    test(&CharTraits::isCloseBox, [](char c)
+    {
+        return c == ']';
+    });
 }
 
 TEST(CharTraits, Backslah)
 {
-	test(&CharTraits::isBackslash, [](char c)
-	{
-		return c == '\\';
-	});
+    test(&CharTraits::isBackslash, [](char c)
+    {
+        return c == '\\';
+    });
 }

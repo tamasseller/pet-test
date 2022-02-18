@@ -249,16 +249,16 @@ TEST(Delegate, DelegateArg)
 
 TEST(Delegate, EmptyOverwrite)
 {
-	pet::Delegate<void()> a;
-	a = pet::Delegate<void()>();
+    pet::Delegate<void()> a;
+    a = pet::Delegate<void()>();
 }
 
 TEST(Delegate, EmptyMoveCtor)
 {
-	struct S{
-		static void f(pet::Delegate<void()> a) {}
-	};
+    struct S{
+        static void f(pet::Delegate<void()> a) {}
+    };
 
-	pet::Delegate<void()> a;
-	S::f(pet::move(a));
+    pet::Delegate<void()> a;
+    S::f(pet::move(a));
 }

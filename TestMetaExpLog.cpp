@@ -26,58 +26,58 @@ using namespace pet;
 TEST_GROUP(Exp) {};
 
 TEST(Exp, TwoAdZero) {
-	auto val = exp<2>::x<0>::value;
-	CHECK(val == 1);
+    auto val = exp<2>::x<0>::value;
+    CHECK(val == 1);
 }
 
 TEST(Exp, ThreeAdZero) {
-	auto val = exp<3>::x<0>::value;
-	CHECK(val == 1);
+    auto val = exp<3>::x<0>::value;
+    CHECK(val == 1);
 }
 
 TEST(Exp, TwoAdOne) {
-	auto val = exp<2>::x<1>::value;
-	CHECK(val == 2);
+    auto val = exp<2>::x<1>::value;
+    CHECK(val == 2);
 }
 
 TEST(Exp, FiveAdOne) {
-	auto val = exp<5>::x<1>::value;
-	CHECK(val == 5);
+    auto val = exp<5>::x<1>::value;
+    CHECK(val == 5);
 }
 
 TEST(Exp, TwoAdTen) {
-	auto val = exp<2>::x<10>::value;
-	CHECK(val == 1024);
+    auto val = exp<2>::x<10>::value;
+    CHECK(val == 1024);
 }
 
 TEST(Exp, SevenAdFive) {
-	auto val = exp<7>::x<5>::value;
-	CHECK(val == 16807);
+    auto val = exp<7>::x<5>::value;
+    CHECK(val == 16807);
 }
 
 TEST(Exp, ElevenAdThree) {
-	auto val = exp<11>::x<3>::value;
-	CHECK(val == 1331);
+    auto val = exp<11>::x<3>::value;
+    CHECK(val == 1331);
 }
 
 TEST_GROUP(Log) {};
 
 TEST(Log, Log2Two) {
-	auto val = log<2>::x<2>::value;
-	CHECK(val == 1);
+    auto val = log<2>::x<2>::value;
+    CHECK(val == 1);
 }
 
 TEST(Log, Log3Nine) {
-	auto val = log<3>::x<9>::value;
-	CHECK(val == 2);
+    auto val = log<3>::x<9>::value;
+    CHECK(val == 2);
 }
 
 TEST(Log, Log3Seven) {
-	auto val = log<3>::x<7>::value;
-	CHECK(val == 1);
+    auto val = log<3>::x<7>::value;
+    CHECK(val == 1);
 }
 
 TEST(Log, Log2Fourteen) {
-	auto val = log<2>::x<14>::value;
-	CHECK(val == 3);
+    auto val = log<2>::x<14>::value;
+    CHECK(val == 3);
 }

@@ -27,62 +27,62 @@ TEST_GROUP(Maybe) {};
 
 TEST(Maybe, Sanity)
 {
-	Maybe m = 123;
-	CHECK((bool)m && *m == 123);
+    Maybe m = 123;
+    CHECK((bool)m && *m == 123);
 
-	decltype(m) n;
-	CHECK(!n);
+    decltype(m) n;
+    CHECK(!n);
 
-	n = m;
-	CHECK((bool)n && *n == 123);
+    n = m;
+    CHECK((bool)n && *n == 123);
 
-	m = 234;
-	CHECK((bool)n && *n == 123);
-	CHECK((bool)m && *m == 234);
+    m = 234;
+    CHECK((bool)n && *n == 123);
+    CHECK((bool)m && *m == 234);
 
-	auto o(m);
-	CHECK((bool)o && *o == 234);
+    auto o(m);
+    CHECK((bool)o && *o == 234);
 }
 
 TEST(Maybe, Movable)
 {
-	struct Movable
-	{
-		Movable() {}
+    struct Movable
+    {
+        Movable() {}
 
-		Movable(const Movable&) = delete;
-		Movable& operator =(const Movable&) = delete;
+        Movable(const Movable&) = delete;
+        Movable& operator =(const Movable&) = delete;
 
-		Movable(Movable&&) = default;
-		Movable& operator =(Movable&&) = default;
-	};
+        Movable(Movable&&) = default;
+        Movable& operator =(Movable&&) = default;
+    };
 
-	Maybe<Movable> m(nullptr);
-	CHECK((bool)m);
+    Maybe<Movable> m(nullptr);
+    CHECK((bool)m);
 
-	decltype(m) n;
-	CHECK(!n);
+    decltype(m) n;
+    CHECK(!n);
 
-	n = pet::move(m);
-	CHECK(!!n);
+    n = pet::move(m);
+    CHECK(!!n);
 }
 
 TEST(Maybe, Immobile)
 {
-	struct Immobile
-	{
-		Immobile() {}
+    struct Immobile
+    {
+        Immobile() {}
 
-		Immobile(const Immobile&) = delete;
-		Immobile& operator =(const Immobile&) = delete;
+        Immobile(const Immobile&) = delete;
+        Immobile& operator =(const Immobile&) = delete;
 
-		Immobile(Immobile&&) = delete;
-		Immobile& operator =(Immobile&&) = delete;
-	};
+        Immobile(Immobile&&) = delete;
+        Immobile& operator =(Immobile&&) = delete;
+    };
 
-	Maybe<Immobile> m(nullptr);
-	CHECK((bool)m);
+    Maybe<Immobile> m(nullptr);
+    CHECK((bool)m);
 
-	decltype(m) n;
-	CHECK(!n);
+    decltype(m) n;
+    CHECK(!n);
 }

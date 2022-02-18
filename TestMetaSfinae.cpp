@@ -23,35 +23,35 @@
 
 template<bool x>
 typename EnableIf<!x, int>::Type foo() {
-	return 0;
+    return 0;
 }
 
 template<bool x>
 typename EnableIf<x, int>::Type foo() {
-	return 1;
+    return 1;
 }
 
 template<bool y>
 struct Embedded {
-	template<bool x=y>
-	typename EnableIf<!x, int>::Type foo() {
-		return 0;
-	}
+    template<bool x=y>
+    typename EnableIf<!x, int>::Type foo() {
+        return 0;
+    }
 
-	template<bool x=y>
-	typename EnableIf<x, int>::Type foo() {
-		return 1;
-	}
+    template<bool x=y>
+    typename EnableIf<x, int>::Type foo() {
+        return 1;
+    }
 };
 
 TEST_GROUP(MetaSfinae) {};
 
 TEST(MetaSfinae, Simple) {
-	CHECK(foo<true>() == 1);
-	CHECK(foo<false>() == 0);
+    CHECK(foo<true>() == 1);
+    CHECK(foo<false>() == 0);
 }
 
 TEST(MetaSfinae, Embedded) {
-	CHECK(Embedded<true>().foo() == 1);
-	CHECK(Embedded<false>().foo() == 0);
+    CHECK(Embedded<true>().foo() == 1);
+    CHECK(Embedded<false>().foo() == 0);
 }

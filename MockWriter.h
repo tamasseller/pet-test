@@ -26,65 +26,65 @@
 
 struct MwMockBackend
 {
-	inline MwMockBackend(pet::LogLevel, const char*);
-	inline ~MwMockBackend();
-	inline void operator delete(void*) {}
+    inline MwMockBackend(pet::LogLevel, const char*);
+    inline ~MwMockBackend();
+    inline void operator delete(void*) {}
 
-	inline void operator<<(const char* val);
-	inline void operator<<(short val);
-	inline void operator<<(unsigned short val);
-	inline void operator<<(int val);
-	inline void operator<<(unsigned int val);
-	inline void operator<<(long val);
-	inline void operator<<(unsigned long val);
-	inline void operator<<(float val);
-	inline void operator<<(double val);
-	inline void operator<<(long double val);
-	inline void operator<<(const void* val);
+    inline void operator<<(const char* val);
+    inline void operator<<(short val);
+    inline void operator<<(unsigned short val);
+    inline void operator<<(int val);
+    inline void operator<<(unsigned int val);
+    inline void operator<<(long val);
+    inline void operator<<(unsigned long val);
+    inline void operator<<(float val);
+    inline void operator<<(double val);
+    inline void operator<<(long double val);
+    inline void operator<<(const void* val);
 };
 
 struct MwRecordingBackend
 {
-	inline MwRecordingBackend(pet::LogLevel, const char*) {}
-	inline void operator delete(void*) {}
+    inline MwRecordingBackend(pet::LogLevel, const char*) {}
+    inline void operator delete(void*) {}
 
-	inline void operator<<(const char* val);
-	inline void operator<<(short val);
-	inline void operator<<(unsigned short val);
-	inline void operator<<(int val);
-	inline void operator<<(unsigned int val);
-	inline void operator<<(long val);
-	inline void operator<<(unsigned long val);
-	inline void operator<<(float val);
-	inline void operator<<(double val);
-	inline void operator<<(long double val);
-	inline void operator<<(const void* val);
+    inline void operator<<(const char* val);
+    inline void operator<<(short val);
+    inline void operator<<(unsigned short val);
+    inline void operator<<(int val);
+    inline void operator<<(unsigned int val);
+    inline void operator<<(long val);
+    inline void operator<<(unsigned long val);
+    inline void operator<<(float val);
+    inline void operator<<(double val);
+    inline void operator<<(long double val);
+    inline void operator<<(const void* val);
 };
 
 struct MwPrintfBackend: pet::PrintfWriter
 {
-	using PrintfWriter::PrintfWriter;
-	inline void operator delete(void*) {}
+    using PrintfWriter::PrintfWriter;
+    inline void operator delete(void*) {}
 };
 
 class MockWriter: public pet::PolymorphicWriter
 {
-	inline pet::PolymorphicWriter::Receiver* createReceiver(pet::LogLevel l, const char* name);
+    inline pet::PolymorphicWriter::Receiver* createReceiver(pet::LogLevel l, const char* name);
 
-	pet::MutableStorage <
-		pet::PolymorphicTraceWriterWrapper<MwMockBackend>,
-		pet::PolymorphicTraceWriterWrapper<MwPrintfBackend>,
-		pet::PolymorphicTraceWriterWrapper<MwRecordingBackend>
-	> state;
+    pet::MutableStorage <
+        pet::PolymorphicTraceWriterWrapper<MwMockBackend>,
+        pet::PolymorphicTraceWriterWrapper<MwPrintfBackend>,
+        pet::PolymorphicTraceWriterWrapper<MwRecordingBackend>
+    > state;
 
 public:
-	MockWriter(pet::LogLevel, const char*);
-	inline ~MockWriter() = default;
+    MockWriter(pet::LogLevel, const char*);
+    inline ~MockWriter() = default;
 
-	MockWriter(MockWriter&&) = delete;
-	MockWriter(const MockWriter&) = delete;
-	MockWriter& operator =(MockWriter&&) = delete;;
-	MockWriter& operator =(const MockWriter&) = delete;
+    MockWriter(MockWriter&&) = delete;
+    MockWriter(const MockWriter&) = delete;
+    MockWriter& operator =(MockWriter&&) = delete;;
+    MockWriter& operator =(const MockWriter&) = delete;
 };
 
 #endif /* MOCKWRITER_H_ */

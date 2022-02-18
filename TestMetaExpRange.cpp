@@ -27,17 +27,17 @@ using namespace pet;
 TEST_GROUP(ExpRange) {};
 
 TEST(ExpRange, BaseTwoOneToTen) {
-	for(int i=0; i<10; i++) {
-		auto val = applyOverRange<exp<2>::x, 1, 10>::value[i];
-		CHECK(val == 2 << i);
-	}
+    for(int i=0; i<10; i++) {
+        auto val = applyOverRange<exp<2>::x, 1, 10>::value[i];
+        CHECK(val == 2 << i);
+    }
 }
 
 TEST(ExpRange, BaseThreeZeroToFifteen) {
-	unsigned int x = 1;
-	for(int i=0; i<15; i++) {
-		auto val = applyOverRange<exp<3>::x, 0, 15>::value[i];
-		CHECK(val == x);
-		x *= 3;
-	}
+    unsigned int x = 1;
+    for(int i=0; i<15; i++) {
+        auto val = applyOverRange<exp<3>::x, 0, 15>::value[i];
+        CHECK(val == x);
+        x *= 3;
+    }
 }

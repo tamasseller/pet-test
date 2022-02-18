@@ -24,297 +24,297 @@
 using namespace pet;
 
 TEST_GROUP(StaticFifo) {
-	typedef StaticFifo<16> Uut;
-	Uut uut;
+    typedef StaticFifo<16> Uut;
+    Uut uut;
 };
 
 TEST(StaticFifo, Sanity)
 {
-	char* buff1, *buff2;
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
-	CHECK(!uut.nextReadable(buff1));
-	CHECK(*uut.begin() == 0);
-	CHECK(*uut.end() == 0);
+    char* buff1, *buff2;
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
+    CHECK(!uut.nextReadable(buff1));
+    CHECK(*uut.begin() == 0);
+    CHECK(*uut.end() == 0);
 
-	uut.doneReading(0);
-	CHECK(uut.nextWritable(buff1) == 16);
+    uut.doneReading(0);
+    CHECK(uut.nextWritable(buff1) == 16);
 
-	uut.doneWriting(8);
-	CHECK(!uut.isEmpty());
-	CHECK(!uut.isFull());
-	CHECK(*uut.begin() == 0);
-	CHECK(*uut.end() == 8);
+    uut.doneWriting(8);
+    CHECK(!uut.isEmpty());
+    CHECK(!uut.isFull());
+    CHECK(*uut.begin() == 0);
+    CHECK(*uut.end() == 8);
 
-	CHECK(uut.nextReadable(buff2) == 8);
-	CHECK(buff2 == buff1);
-	CHECK(*uut.begin() == 0);
-	CHECK(*uut.end() == 8);
+    CHECK(uut.nextReadable(buff2) == 8);
+    CHECK(buff2 == buff1);
+    CHECK(*uut.begin() == 0);
+    CHECK(*uut.end() == 8);
 
-	uut.doneReading(8);
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
-	CHECK(*uut.begin() == 8);
-	CHECK(*uut.end() == 8);
+    uut.doneReading(8);
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
+    CHECK(*uut.begin() == 8);
+    CHECK(*uut.end() == 8);
 }
 
 TEST(StaticFifo, Fill)
 {
-	char* buff;
+    char* buff;
 
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	CHECK(uut.nextWritable(buff) == 16);
-	uut.doneWriting(16);
+    CHECK(uut.nextWritable(buff) == 16);
+    uut.doneWriting(16);
 
-	CHECK(!uut.isEmpty());
-	CHECK(uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(uut.isFull());
 
-	auto it = uut.begin();
-	CHECK(*uut.end() == 0);
+    auto it = uut.begin();
+    CHECK(*uut.end() == 0);
 
-	for(int i = 0; i < 16; i++)
-	{
-		CHECK(it != uut.end());
-		CHECK(*it == i);
-		++it;
-	}
+    for(int i = 0; i < 16; i++)
+    {
+        CHECK(it != uut.end());
+        CHECK(*it == i);
+        ++it;
+    }
 
-	CHECK(it == uut.end());
+    CHECK(it == uut.end());
 
-	CHECK(!uut.nextWritable(buff));
+    CHECK(!uut.nextWritable(buff));
 
-	CHECK(!uut.isEmpty());
-	CHECK(uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(uut.isFull());
 }
 
 TEST(StaticFifo, FillThenConsume)
 {
-	char* buff;
+    char* buff;
 
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	CHECK(uut.nextWritable(buff) == 16);
-	uut.doneWriting(16);
+    CHECK(uut.nextWritable(buff) == 16);
+    uut.doneWriting(16);
 
-	CHECK(!uut.isEmpty());
-	CHECK(uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(uut.isFull());
 
-	CHECK(uut.nextReadable(buff) == 16);
-	uut.doneReading(8);
+    CHECK(uut.nextReadable(buff) == 16);
+    uut.doneReading(8);
 
-	CHECK(!uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	CHECK(uut.nextWritable(buff) == 8);
-	uut.doneReading(8);
+    CHECK(uut.nextWritable(buff) == 8);
+    uut.doneReading(8);
 
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
 }
 
 TEST(StaticFifo, FillConsumeFill)
 {
-	char* buff;
+    char* buff;
 
-	CHECK(uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	CHECK(uut.nextWritable(buff) == 16);
-	uut.doneWriting(16);
+    CHECK(uut.nextWritable(buff) == 16);
+    uut.doneWriting(16);
 
-	CHECK(!uut.isEmpty());
-	CHECK(uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(uut.isFull());
 
-	CHECK(uut.nextReadable(buff) == 16);
-	uut.doneReading(8);
+    CHECK(uut.nextReadable(buff) == 16);
+    uut.doneReading(8);
 
-	CHECK(!uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	CHECK(uut.nextWritable(buff) == 8);
-	uut.doneWriting(6);
+    CHECK(uut.nextWritable(buff) == 8);
+    uut.doneWriting(6);
 
-	CHECK(!uut.isEmpty());
-	CHECK(!uut.isFull());
+    CHECK(!uut.isEmpty());
+    CHECK(!uut.isFull());
 
-	auto it = uut.begin();
-	CHECK(*uut.end() == 6);
+    auto it = uut.begin();
+    CHECK(*uut.end() == 6);
 
-	for(int i = 0; i < 8; i++)
-	{
-		CHECK(it != uut.end());
-		CHECK(*it == i + 8);
-		++it;
-	}
+    for(int i = 0; i < 8; i++)
+    {
+        CHECK(it != uut.end());
+        CHECK(*it == i + 8);
+        ++it;
+    }
 
-	for(int i = 0; i < 6; i++)
-	{
-		CHECK(it != uut.end());
-		CHECK(*it == i);
-		++it;
-	}
+    for(int i = 0; i < 6; i++)
+    {
+        CHECK(it != uut.end());
+        CHECK(*it == i);
+        ++it;
+    }
 
-	CHECK(it == uut.end());
+    CHECK(it == uut.end());
 }
 
 TEST(StaticFifo, FillEmptyThenRefill)
 {
-	char* buff;
-	CHECK(uut.nextWritable(buff) == 16);
-	uut.doneWriting(16);
+    char* buff;
+    CHECK(uut.nextWritable(buff) == 16);
+    uut.doneWriting(16);
 
-	CHECK(uut.nextReadable(buff) == 16);
-	uut.doneReading(16);
+    CHECK(uut.nextReadable(buff) == 16);
+    uut.doneReading(16);
 
-	CHECK(uut.nextWritable(buff) == 16);
-	uut.doneWriting(16);
+    CHECK(uut.nextWritable(buff) == 16);
+    uut.doneWriting(16);
 }
 
 TEST(StaticFifo, Helpers)
 {
-	char c;
-	CHECK(!uut.readOne(c));
+    char c;
+    CHECK(!uut.readOne(c));
 
-	CHECK(uut.writeOne('f'));
-	CHECK(uut.writeOne('o'));
-	CHECK(uut.writeOne('o'));
+    CHECK(uut.writeOne('f'));
+    CHECK(uut.writeOne('o'));
+    CHECK(uut.writeOne('o'));
 
-	char* dummy;
-	uut.doneWriting(uut.nextWritable(dummy));
+    char* dummy;
+    uut.doneWriting(uut.nextWritable(dummy));
 
-	CHECK(!uut.writeOne('x'));
+    CHECK(!uut.writeOne('x'));
 
-	CHECK(uut.readOne(c));
-	CHECK(c == 'f');
-	CHECK(uut.readOne(c));
-	CHECK(c == 'o');
-	CHECK(uut.readOne(c));
-	CHECK(c == 'o');
+    CHECK(uut.readOne(c));
+    CHECK(c == 'f');
+    CHECK(uut.readOne(c));
+    CHECK(c == 'o');
+    CHECK(uut.readOne(c));
+    CHECK(c == 'o');
 }
 
 
 TEST(StaticFifo, Exercise)
 {
-	char* buff;
+    char* buff;
 
-	for(int i=0; i<16; i++)
-	{
-		for(uint32_t writeSize = 7; writeSize;)
-		{
-			const uint32_t space = uut.nextWritable(buff);
-			uint32_t written = 0;
+    for(int i=0; i<16; i++)
+    {
+        for(uint32_t writeSize = 7; writeSize;)
+        {
+            const uint32_t space = uut.nextWritable(buff);
+            uint32_t written = 0;
 
-			for(int j=0; j < space && writeSize; j++)
-			{
-				buff[j] = writeSize--;
-				written++;
-			}
+            for(int j=0; j < space && writeSize; j++)
+            {
+                buff[j] = writeSize--;
+                written++;
+            }
 
-			uut.doneWriting(written);
-		}
+            uut.doneWriting(written);
+        }
 
-		for(uint32_t readSize = 7; readSize;)
-		{
-			uint32_t space = uut.nextReadable(buff);
-			uint32_t read = 0;
-			for(int j=0; j < space && readSize; j++)
-			{
-				CHECK(buff[j] == readSize--);
-				read++;
-			}
+        for(uint32_t readSize = 7; readSize;)
+        {
+            uint32_t space = uut.nextReadable(buff);
+            uint32_t read = 0;
+            for(int j=0; j < space && readSize; j++)
+            {
+                CHECK(buff[j] == readSize--);
+                read++;
+            }
 
-			uut.doneReading(read);
-		}
+            uut.doneReading(read);
+        }
 
-		CHECK(!uut.nextReadable(buff));
-	}
+        CHECK(!uut.nextReadable(buff));
+    }
 }
 
 TEST_GROUP(IndirectFifo)
 {
-	typedef IndirectFifo<16, int> Uut;
-	int *buffer;
-	Uut *uut;
+    typedef IndirectFifo<16, int> Uut;
+    int *buffer;
+    Uut *uut;
 
-	TEST_SETUP() {
-		uut = new Uut(buffer = new int[16]);
-	}
+    TEST_SETUP() {
+        uut = new Uut(buffer = new int[16]);
+    }
 
-	TEST_TEARDOWN()
-	{
-		delete uut;
-		delete buffer;
-	}
+    TEST_TEARDOWN()
+    {
+        delete uut;
+        delete buffer;
+    }
 };
 
 TEST(IndirectFifo, ExerciseFull)
 {
-	static constexpr const uint32_t prime1 = 13, prime2 = 7;
-	uint32_t writeCounter = 0;
-	uint32_t readCounter = 0;
+    static constexpr const uint32_t prime1 = 13, prime2 = 7;
+    uint32_t writeCounter = 0;
+    uint32_t readCounter = 0;
 
-	for(uint32_t readAmount = prime2; readAmount; readAmount = (readAmount + prime2) % prime1)
-	{
-		int* buff;
+    for(uint32_t readAmount = prime2; readAmount; readAmount = (readAmount + prime2) % prime1)
+    {
+        int* buff;
 
-		while(const uint32_t space = uut->nextWritable(buff))
-		{
-			for(int i=0; i < space; i++)
-				buff[i] = writeCounter++;
+        while(const uint32_t space = uut->nextWritable(buff))
+        {
+            for(int i=0; i < space; i++)
+                buff[i] = writeCounter++;
 
-			uut->doneWriting(space);
-		}
+            uut->doneWriting(space);
+        }
 
-		for(uint32_t readSize = readAmount; readSize;)
-		{
-			uint32_t space = uut->nextReadable(buff);
-			uint32_t read = 0;
-			for(int j=0; j < space && read < readSize; j++)
-			{
-				CHECK(buff[j] == readCounter++);
-				read++;
-			}
+        for(uint32_t readSize = readAmount; readSize;)
+        {
+            uint32_t space = uut->nextReadable(buff);
+            uint32_t read = 0;
+            for(int j=0; j < space && read < readSize; j++)
+            {
+                CHECK(buff[j] == readCounter++);
+                read++;
+            }
 
-			readSize -= read;
-			uut->doneReading(read);
-		}
-	}
+            readSize -= read;
+            uut->doneReading(read);
+        }
+    }
 }
 
 TEST(IndirectFifo, ExerciseEmpty)
 {
-	static constexpr const uint32_t prime1 = 13, prime2 = 7;
-	uint32_t writeCounter = 0;
-	uint32_t readCounter = 0;
+    static constexpr const uint32_t prime1 = 13, prime2 = 7;
+    uint32_t writeCounter = 0;
+    uint32_t readCounter = 0;
 
-	for(uint32_t witeAmount = prime2; witeAmount; witeAmount = (witeAmount + prime2) % prime1)
-	{
-		int* buff;
+    for(uint32_t witeAmount = prime2; witeAmount; witeAmount = (witeAmount + prime2) % prime1)
+    {
+        int* buff;
 
-		for(uint32_t writeSize = witeAmount; writeSize;)
-		{
-			uint32_t space = uut->nextWritable(buff);
-			uint32_t written = 0;
-			for(int j=0; j < space && written < writeSize; j++)
-			{
-				buff[j] = writeCounter++;
-				written++;
-			}
+        for(uint32_t writeSize = witeAmount; writeSize;)
+        {
+            uint32_t space = uut->nextWritable(buff);
+            uint32_t written = 0;
+            for(int j=0; j < space && written < writeSize; j++)
+            {
+                buff[j] = writeCounter++;
+                written++;
+            }
 
-			writeSize -= written;
+            writeSize -= written;
 
-			uut->doneWriting(written);
-		}
+            uut->doneWriting(written);
+        }
 
-		while(const uint32_t space = uut->nextReadable(buff))
-		{
-			for(int i=0; i < space; i++)
-				CHECK(buff[i] == readCounter++);
+        while(const uint32_t space = uut->nextReadable(buff))
+        {
+            for(int i=0; i < space; i++)
+                CHECK(buff[i] == readCounter++);
 
-			uut->doneReading(space);
-		}
-	}
+            uut->doneReading(space);
+        }
+    }
 }

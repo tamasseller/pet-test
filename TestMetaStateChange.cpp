@@ -93,26 +93,26 @@ TEST_GROUP(MetaStateChange) {};
 
 TEST(MetaStateChange, Repeat)
 {
-	MOCK(En)::EXPECT(1);
-	MOCK(Lo)::EXPECT(0);
-	apply<RepeatedState1, RepeatedState2>();
+    MOCK(En)::EXPECT(1);
+    MOCK(Lo)::EXPECT(0);
+    apply<RepeatedState1, RepeatedState2>();
 
-	MOCK(En)::EXPECT(0);
-	MOCK(Lo)::EXPECT(1);
-	apply<RepeatedState2, RepeatedState1>();
+    MOCK(En)::EXPECT(0);
+    MOCK(Lo)::EXPECT(1);
+    apply<RepeatedState2, RepeatedState1>();
 }
 
 TEST(MetaStateChange, RepeatForced)
 {
-	MOCK(En)::EXPECT(1);
-	MOCK(Lo)::EXPECT(0);
-	MOCK(En)::EXPECT(1);
-	apply<ForceRepeatedState1, ForceRepeatedState2>();
+    MOCK(En)::EXPECT(1);
+    MOCK(Lo)::EXPECT(0);
+    MOCK(En)::EXPECT(1);
+    apply<ForceRepeatedState1, ForceRepeatedState2>();
 
-	MOCK(En)::EXPECT(0);
-	MOCK(Lo)::EXPECT(1);
-	MOCK(En)::EXPECT(1);
-	apply<ForceRepeatedState2, ForceRepeatedState1>();
+    MOCK(En)::EXPECT(0);
+    MOCK(Lo)::EXPECT(1);
+    MOCK(En)::EXPECT(1);
+    apply<ForceRepeatedState2, ForceRepeatedState1>();
 }
 
 

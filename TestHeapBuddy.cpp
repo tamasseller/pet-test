@@ -72,42 +72,42 @@ TEST_GROUP(BuddyInline)
 
     void runRandomStress(uint32_t sizeMult = 1)
     {
-    	void* ptrs[1024];
-    	int idx = 0;
-    	int a = 1, b = 1;
+        void* ptrs[1024];
+        int idx = 0;
+        int a = 1, b = 1;
 
-    	for(int round = 0; round < 1000; round++)
-    	{
-    	    while(true)
-    	    {
-    	        auto size = a;
-    	        size = (a + b) % 31;
-    	        b = a;
-    	        a = size;
-    	        size *= sizeMult;
+        for(int round = 0; round < 1000; round++)
+        {
+            while(true)
+            {
+                auto size = a;
+                size = (a + b) % 31;
+                b = a;
+                a = size;
+                size *= sizeMult;
 
-    	        CHECK(idx < sizeof(ptrs)/sizeof(*ptrs));
+                CHECK(idx < sizeof(ptrs)/sizeof(*ptrs));
 
-    	        uint32_t actual;
-    	        if(auto x = uut.allocate(size, actual))
-    	        {
-    	        	CHECK(size <= actual && actual < pet::max(2 * size, 4 + 1));
-    	        	ptrs[idx++] = x;
-    	        }
-    	        else
-    	        {
-    	        	break;
-    	        }
-    	    }
+                uint32_t actual;
+                if(auto x = uut.allocate(size, actual))
+                {
+                    CHECK(size <= actual && actual < pet::max(2 * size, 4 + 1));
+                    ptrs[idx++] = x;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
             for(int i = 1; i < idx; i++)
                 for(int j = 0; j < i; j++)
                     CHECK(ptrs[i] != ptrs[j]);
 
-    	    const auto nFree = idx / 2;
-    	    for(int i = 0; i < nFree; i++)
-    	        uut.free(ptrs[--idx]);
-    	}
+            const auto nFree = idx / 2;
+            for(int i = 0; i < nFree; i++)
+                uut.free(ptrs[--idx]);
+        }
     }
 };
 
@@ -115,7 +115,7 @@ TEST(BuddyInline, Abuse)
 {
     CHECK(decltype(uut)::minimalTreeSize(1) == -1);
 
-	CHECK(!uut.init(mem, mem));
+    CHECK(!uut.init(mem, mem));
     CHECK(!uut.init(mem, mem - size));
 
     CHECK(!uut.init(mem, mem + 1, nullptr, 0));
@@ -170,47 +170,47 @@ TEST(BuddyInline, PassBigger)
 
 TEST(BuddyInline, RandomStress)
 {
-	CHECK(uut.init(mem, mem + size));
-	runRandomStress();
+    CHECK(uut.init(mem, mem + size));
+    runRandomStress();
 }
 
 TEST(BuddyInline, RandomStressOffline)
 {
-	char offlineTree[16];
-	CHECK(uut.init(mem, mem + size, offlineTree, sizeof(offlineTree)));
-	runRandomStress();
+    char offlineTree[16];
+    CHECK(uut.init(mem, mem + size, offlineTree, sizeof(offlineTree)));
+    runRandomStress();
 }
 
 TEST(BuddyInline, AllocateAllOffline)
 {
-	char offlineTree[16];
+    char offlineTree[16];
 
-	auto minTree = decltype(uut)::minimalTreeSize(sizeof(mem));
-	CHECK(sizeof(offlineTree) > minTree);
-	CHECK(!uut.init(mem, mem + size, offlineTree, minTree - 1));
-	CHECK(uut.init(mem, mem + size, offlineTree, minTree));
+    auto minTree = decltype(uut)::minimalTreeSize(sizeof(mem));
+    CHECK(sizeof(offlineTree) > minTree);
+    CHECK(!uut.init(mem, mem + size, offlineTree, minTree - 1));
+    CHECK(uut.init(mem, mem + size, offlineTree, minTree));
 
-	auto x = uut.allocate(sizeof(mem));
-	CHECK(x);
-	CHECK(!uut.allocate(1));
-	uut.free(x);
-	CHECK(uut.allocate(size));
+    auto x = uut.allocate(sizeof(mem));
+    CHECK(x);
+    CHECK(!uut.allocate(1));
+    uut.free(x);
+    CHECK(uut.allocate(size));
 }
 
 TEST(BuddyInline, RandomStressOfflineBigData)
 {
-	char bigData[16 * 1024];
-	char offlineTree[2050];
+    char bigData[16 * 1024];
+    char offlineTree[2050];
 
-	auto minTree = decltype(uut)::minimalTreeSize(sizeof(bigData));
-	CHECK(sizeof(offlineTree) > minTree);
-	CHECK(!uut.init(bigData, bigData + sizeof(bigData), offlineTree, minTree - 1));
-	CHECK(uut.init(bigData, bigData + sizeof(bigData), offlineTree, minTree));
+    auto minTree = decltype(uut)::minimalTreeSize(sizeof(bigData));
+    CHECK(sizeof(offlineTree) > minTree);
+    CHECK(!uut.init(bigData, bigData + sizeof(bigData), offlineTree, minTree - 1));
+    CHECK(uut.init(bigData, bigData + sizeof(bigData), offlineTree, minTree));
 
-	for(int i = minTree; i < sizeof(offlineTree); i++)
-		offlineTree[i] ^= 0xaa;
+    for(int i = minTree; i < sizeof(offlineTree); i++)
+        offlineTree[i] ^= 0xaa;
 
-	runRandomStress();
+    runRandomStress();
 }
 
 TEST(BuddyInline, Grow)

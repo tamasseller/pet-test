@@ -23,11 +23,11 @@ TEST(Sanity) {
 }
 
 TEST(CheckTrue) {
-	CHECK(true);
+    CHECK(true);
 }
 
 TEST(CheckFalse) {
-	CHECK(false);
+    CHECK(false);
 }
 
 TEST(EmptyMessageFailure) {

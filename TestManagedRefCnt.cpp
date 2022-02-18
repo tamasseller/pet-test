@@ -42,21 +42,21 @@ TEST_GROUP(RefCnt)
 
     struct FirstSuperclass
     {
-    	inline virtual ~FirstSuperclass() {
-    		MOCK(Target)::CALL(FirstSuperclassDtor);
-    	}
+        inline virtual ~FirstSuperclass() {
+            MOCK(Target)::CALL(FirstSuperclassDtor);
+        }
     };
 
     struct NonFirstSuperClass: pet::RefCnt<NonFirstSuperClass, Allocator> {
-    	inline virtual ~NonFirstSuperClass() = default;
+        inline virtual ~NonFirstSuperClass() = default;
     };
 
     struct SubTarget: FirstSuperclass, NonFirstSuperClass
     {
-    	SubTarget::Ptr<SubTarget> strg;
+        SubTarget::Ptr<SubTarget> strg;
         inline SubTarget()
         {
-        	MOCK(Target)::CALL(SubTargetCtor);
+            MOCK(Target)::CALL(SubTargetCtor);
         }
 
         inline virtual ~SubTarget() = default;
@@ -67,13 +67,13 @@ TEST_GROUP(RefCnt)
 
     struct MockTracer: Allocator::ReferenceTracer
     {
-		inline virtual void acquistion(void* refLoc, void* trg) override {
-			MOCK(RefTrace)::CALL(acquire);
-		}
+        inline virtual void acquistion(void* refLoc, void* trg) override {
+            MOCK(RefTrace)::CALL(acquire);
+        }
 
-		inline virtual void release(void* refLoc, void* trg) override {
-			MOCK(RefTrace)::CALL(release).withParam(trg);
-		}
+        inline virtual void release(void* refLoc, void* trg) override {
+            MOCK(RefTrace)::CALL(release).withParam(trg);
+        }
     };
 
     static inline MockTracer tracer;
@@ -81,7 +81,7 @@ TEST_GROUP(RefCnt)
 
 TEST(RefCnt, Sanity)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
 
     {
         MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
@@ -105,9 +105,9 @@ TEST(RefCnt, Sanity)
 
 TEST(RefCnt, Empty)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
 
-	Target::Ptr<Target> ptr;
+    Target::Ptr<Target> ptr;
     CHECK(false == (bool)ptr);
     CHECK(true == !ptr);
     CHECK(true == (ptr == nullptr));
@@ -127,10 +127,10 @@ TEST(RefCnt, CopyCtor)
         }
     } s;
 
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
 
     {
-	    MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
+        MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
         MOCK(RefTrace)::EXPECT(acquire);
         auto ptr = Target::make(1, 'a');
 
@@ -152,7 +152,7 @@ TEST(RefCnt, CopyCtor)
 
 TEST(RefCnt, CopyEmpty)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     Target::Ptr<Target> p;
     Target::Ptr<Target> q(p);
     Allocator::tracer = nullptr;
@@ -160,7 +160,7 @@ TEST(RefCnt, CopyEmpty)
 
 TEST(RefCnt, CopyEq1)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
         MOCK(RefTrace)::EXPECT(acquire);
@@ -198,9 +198,9 @@ TEST(RefCnt, CopyEq1)
 
 TEST(RefCnt, CopyEq2)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
-		Target::Ptr<Target> q;
+        Target::Ptr<Target> q;
         CHECK(Allocator::count == 0);
 
         {
@@ -232,7 +232,7 @@ TEST(RefCnt, CopyEq2)
 
 TEST(RefCnt, CopyEq3)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         MOCK(Target)::EXPECT(Ctor).withParam(4).withParam('d');
         MOCK(RefTrace)::EXPECT(acquire);
@@ -259,7 +259,7 @@ TEST(RefCnt, CopyEq3)
 
 TEST(RefCnt, CopyEq4)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         Target::Ptr<Target> q;
 
@@ -277,7 +277,7 @@ TEST(RefCnt, CopyEq4)
 
 TEST(RefCnt, MoveCtor1)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
     MOCK(RefTrace)::EXPECT(acquire);
     Target::Ptr<Target> ptr = Target::make(1, 'a');
@@ -302,7 +302,7 @@ TEST(RefCnt, MoveCtor1)
 
 TEST(RefCnt, MoveCtor2)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     Target::Ptr<Target> ptr;
     CHECK(Allocator::count == 0);
 
@@ -317,7 +317,7 @@ TEST(RefCnt, MoveCtor2)
 
 TEST(RefCnt, MoveEq1)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
         MOCK(RefTrace)::EXPECT(acquire);
@@ -354,7 +354,7 @@ TEST(RefCnt, MoveEq1)
 
 TEST(RefCnt, MoveEq2)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         Target::Ptr<Target> q;
         CHECK(Allocator::count == 0);
@@ -386,7 +386,7 @@ TEST(RefCnt, MoveEq2)
 
 TEST(RefCnt, MoveEq3)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
     {
         MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
         MOCK(RefTrace)::EXPECT(acquire);
@@ -411,21 +411,21 @@ TEST(RefCnt, MoveEq3)
 
 TEST(RefCnt, Access)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
 
     Target::Ptr<Target> ptr;
 
     {
-		MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = Target::make(1, 'a');
+        MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = Target::make(1, 'a');
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		MOCK(RefTrace)::EXPECT(acquire);
-		MOCK(RefTrace)::EXPECT(release).withParam(a.get());
-		ptr = a->self();
+        MOCK(RefTrace)::EXPECT(acquire);
+        MOCK(RefTrace)::EXPECT(acquire);
+        MOCK(RefTrace)::EXPECT(release).withParam(a.get());
+        ptr = a->self();
 
-		MOCK(RefTrace)::EXPECT(release).withParam(a.get());
+        MOCK(RefTrace)::EXPECT(release).withParam(a.get());
     }
 
     MOCK(Target)::EXPECT(f);
@@ -443,26 +443,26 @@ TEST(RefCnt, Access)
 
 TEST(RefCnt, Reset)
 {
-	Allocator::tracer = &tracer;
+    Allocator::tracer = &tracer;
 
     MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
 
-	MOCK(RefTrace)::EXPECT(acquire);
+    MOCK(RefTrace)::EXPECT(acquire);
     auto ptr = Target::make(1, 'a');
-	MOCK(RefTrace)::EXPECT(acquire);
+    MOCK(RefTrace)::EXPECT(acquire);
     auto copy = ptr;
 
     CHECK(ptr);
-	MOCK(RefTrace)::EXPECT(release).withParam(ptr.get());
+    MOCK(RefTrace)::EXPECT(release).withParam(ptr.get());
     ptr = nullptr;
     CHECK(!ptr);
     ptr = nullptr;
 
     CHECK(copy);
 
-	MOCK(RefTrace)::EXPECT(release).withParam(copy.get());
+    MOCK(RefTrace)::EXPECT(release).withParam(copy.get());
     MOCK(Target)::EXPECT(Dtor);
-	copy = nullptr;
+    copy = nullptr;
 
     CHECK(!copy);
     Allocator::tracer = nullptr;
@@ -470,211 +470,211 @@ TEST(RefCnt, Reset)
 
 TEST(RefCnt, Compare)
 {
-	Allocator::tracer = &tracer;
-	{
-		MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
-		MOCK(RefTrace)::EXPECT(acquire);
+    Allocator::tracer = &tracer;
+    {
+        MOCK(Target)::EXPECT(Ctor).withParam(1).withParam('a');
+        MOCK(RefTrace)::EXPECT(acquire);
 
-		auto ptr = Target::make(1, 'a');
-		Target::Ptr<Target> empty;
+        auto ptr = Target::make(1, 'a');
+        Target::Ptr<Target> empty;
 
-		CHECK(ptr);
-		CHECK(!empty);
+        CHECK(ptr);
+        CHECK(!empty);
 
-		CHECK(ptr != empty);
-		CHECK(ptr == ptr);
-		CHECK(empty == empty);
-		CHECK(ptr != nullptr);
-		CHECK(!(ptr == nullptr));
-		CHECK(empty == nullptr);
-		CHECK(!(empty != nullptr));
+        CHECK(ptr != empty);
+        CHECK(ptr == ptr);
+        CHECK(empty == empty);
+        CHECK(ptr != nullptr);
+        CHECK(!(ptr == nullptr));
+        CHECK(empty == nullptr);
+        CHECK(!(empty != nullptr));
 
-		MOCK(RefTrace)::EXPECT(release).withParam(ptr.get());
-		MOCK(Target)::EXPECT(Dtor);
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam(ptr.get());
+        MOCK(Target)::EXPECT(Dtor);
+    }
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, SelfRefLoopClear)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	*strga = nullptr;
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    *strga = nullptr;
 
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, SelfRefLoopCopy)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	SubTarget::Ptr<SubTarget> empty;
-	*strga = empty;
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    SubTarget::Ptr<SubTarget> empty;
+    *strga = empty;
 
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, SelfRefLoopMove)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	SubTarget::Ptr<SubTarget> empty;
-	*strga = pet::move(empty);
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    SubTarget::Ptr<SubTarget> empty;
+    *strga = pet::move(empty);
 
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, TwoObjectRingClear)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto b = SubTarget::make<SubTarget>();
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto b = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = b;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = b;
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		b->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        b->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	*strga = nullptr;
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    *strga = nullptr;
 
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, TwoObjectRingCopy)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto b = SubTarget::make<SubTarget>();
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto b = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = b;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = b;
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		b->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        b->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	SubTarget::Ptr<SubTarget> empty;
-	*strga = empty;
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    SubTarget::Ptr<SubTarget> empty;
+    *strga = empty;
 
     Allocator::tracer = nullptr;
 }
 
 TEST(RefCnt, TwoObjectRingMove)
 {
-	Allocator::tracer = &tracer;
-	SubTarget::Ptr<SubTarget> *strga;
+    Allocator::tracer = &tracer;
+    SubTarget::Ptr<SubTarget> *strga;
 
-	{
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto a = SubTarget::make<SubTarget>();
+    {
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto a = SubTarget::make<SubTarget>();
 
-		MOCK(Target)::EXPECT(SubTargetCtor);
-		MOCK(RefTrace)::EXPECT(acquire);
-		auto b = SubTarget::make<SubTarget>();
+        MOCK(Target)::EXPECT(SubTargetCtor);
+        MOCK(RefTrace)::EXPECT(acquire);
+        auto b = SubTarget::make<SubTarget>();
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		a->strg = b;
+        MOCK(RefTrace)::EXPECT(acquire);
+        a->strg = b;
 
-		MOCK(RefTrace)::EXPECT(acquire);
-		b->strg = a;
+        MOCK(RefTrace)::EXPECT(acquire);
+        b->strg = a;
 
-		strga = &a->strg;
+        strga = &a->strg;
 
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
-		MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
-	}
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)b.get());
+        MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)a.get());
+    }
 
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
-	MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	MOCK(Target)::EXPECT(FirstSuperclassDtor);
-	SubTarget::Ptr<SubTarget> empty;
-	*strga = pet::move(empty);
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get());
+    MOCK(RefTrace)::EXPECT(release).withParam((NonFirstSuperClass*)strga->get()->strg.get());
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    MOCK(Target)::EXPECT(FirstSuperclassDtor);
+    SubTarget::Ptr<SubTarget> empty;
+    *strga = pet::move(empty);
 
     Allocator::tracer = nullptr;
 }

@@ -26,26 +26,26 @@ using namespace pet;
 TEST_GROUP(Range) {};
 
 TEST(Range, OneToTen) {
-	for(int i = 0; i < 10; i++) {
-		auto val = range<1, 10>::value[i];
-		CHECK(val == i+1);
-	}
+    for(int i = 0; i < 10; i++) {
+        auto val = range<1, 10>::value[i];
+        CHECK(val == i+1);
+    }
 }
 
 TEST(Range, ZeroToTen) {
-	for(int i = 0; i < 10; i++) {
-		auto val = range<0, 10>::value[i];
-		CHECK(val == i);
-	}
+    for(int i = 0; i < 10; i++) {
+        auto val = range<0, 10>::value[i];
+        CHECK(val == i);
+    }
 }
 
 template<unsigned int x> struct Times2 {
-	static constexpr unsigned int value = 2*x;
+    static constexpr unsigned int value = 2*x;
 };
 
 TEST(Range, ZeroToTwentyStep2) {
-	for(int i = 0; i < 3; i++) {
-		auto val = applyOverRange<Times2, 0, 10>::value[i];
-		CHECK(val == i*2);
-	}
+    for(int i = 0; i < 3; i++) {
+        auto val = applyOverRange<Times2, 0, 10>::value[i];
+        CHECK(val == i*2);
+    }
 }

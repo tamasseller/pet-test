@@ -26,34 +26,34 @@ TEST_GROUP(UnalignedAccess){};
 
 TEST(UnalignedAccess, ReadWriteInt)
 {
-	char buffer[sizeof(int) * 2 - 1];
+    char buffer[sizeof(int) * 2 - 1];
 
-	for(auto i = 0u; i < sizeof(int); i++)
-	{
-		int testValues[] = {0x12345678, 0x5a55a5aa, 0x1337c0de};
+    for(auto i = 0u; i < sizeof(int); i++)
+    {
+        int testValues[] = {0x12345678, 0x5a55a5aa, 0x1337c0de};
 
-		pet::unalignedWrite<int>(buffer + i, 0);
-		for(const auto &v: testValues)
-		{
-			pet::unalignedWrite<int>(buffer + i, v);
-			CHECK(pet::unalignedRead<int>(buffer + i) == v);
-		}
-	}
+        pet::unalignedWrite<int>(buffer + i, 0);
+        for(const auto &v: testValues)
+        {
+            pet::unalignedWrite<int>(buffer + i, v);
+            CHECK(pet::unalignedRead<int>(buffer + i) == v);
+        }
+    }
 }
 
 TEST(UnalignedAccess, ReadWriteShort)
 {
-	char buffer[sizeof(short) * 2 - 1];
+    char buffer[sizeof(short) * 2 - 1];
 
-	for(auto i = 0u; i < sizeof(short); i++)
-	{
-		short testValues[] = {0x1234, 0x5a55, 0x1337};
+    for(auto i = 0u; i < sizeof(short); i++)
+    {
+        short testValues[] = {0x1234, 0x5a55, 0x1337};
 
-		pet::unalignedWrite<short>(buffer + i, 0);
-		for(const auto &v: testValues)
-		{
-			pet::unalignedWrite<short>(buffer + i, v);
-			CHECK(pet::unalignedRead<short>(buffer + i) == v);
-		}
-	}
+        pet::unalignedWrite<short>(buffer + i, 0);
+        for(const auto &v: testValues)
+        {
+            pet::unalignedWrite<short>(buffer + i, v);
+            CHECK(pet::unalignedRead<short>(buffer + i) == v);
+        }
+    }
 }

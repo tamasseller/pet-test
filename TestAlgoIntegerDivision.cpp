@@ -25,41 +25,41 @@ using namespace pet;
 
 TEST_GROUP(IntDiv)
 {
-	static inline void test(uint32_t i, uint32_t j) {
-		CHECK(pet::uDiv32(i, j) == (i/j));
-	}
+    static inline void test(uint32_t i, uint32_t j) {
+        CHECK(pet::uDiv32(i, j) == (i/j));
+    }
 
-	static inline void testi(int32_t i, int32_t j) {
-		CHECK(pet::iDiv32(i, j) == (i/j));
-	}
+    static inline void testi(int32_t i, int32_t j) {
+        CHECK(pet::iDiv32(i, j) == (i/j));
+    }
 };
 
 TEST(IntDiv, DivTable10x10)
 {
-	for(uint32_t i=0; i<10; i++)
-		for(uint32_t j=1; j<10; j++)
-			test(i, j);
+    for(uint32_t i=0; i<10; i++)
+        for(uint32_t j=1; j<10; j++)
+            test(i, j);
 }
 
 TEST(IntDiv, FuckAround)
 {
-	for(uint32_t i=0; i<10; i++)
-		for(uint32_t j=1; j<10; j++)
-			test(i*10+j, 10);
+    for(uint32_t i=0; i<10; i++)
+        for(uint32_t j=1; j<10; j++)
+            test(i*10+j, 10);
 }
 
 TEST(IntDiv, Overflow)
 {
-	for(uint32_t i=0; i<10; i++)
-		for(uint32_t j=1; j<10; j++)
-			test(0xffffffff-i, 0xff+j);
+    for(uint32_t i=0; i<10; i++)
+        for(uint32_t j=1; j<10; j++)
+            test(0xffffffff-i, 0xff+j);
 }
 
 TEST(IntDiv, Signed)
 {
-	for(int n = -1; n < 2; n += 2)
-		for(int m = -1; m < 2; m += 2)
-			for(int32_t i=0; i<10; i++)
-				for(int32_t j=1; j<10; j++)
-					testi(i * n, j * m);
+    for(int n = -1; n < 2; n += 2)
+        for(int m = -1; m < 2; m += 2)
+            for(int32_t i=0; i<10; i++)
+                for(int32_t j=1; j<10; j++)
+                    testi(i * n, j * m);
 }
