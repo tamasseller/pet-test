@@ -26,6 +26,7 @@ SOURCES += TestDataMedianFilter.cpp
 SOURCES += TestDataMutableStorage.cpp
 SOURCES += TestDataPriorityQueue.cpp
 SOURCES += TestDataCircularBuffer.cpp
+SOURCES += TestDataSharedAtomicList.cpp
 SOURCES += TestDataOrderedDoubleList.cpp
 SOURCES += TestIntegrationRefCntDelegate.cpp
 SOURCES += TestIntegrationSmartPtrLinkedList.cpp

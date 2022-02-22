@@ -24,8 +24,7 @@
 
 #include "meta/Utility.h"
 
-TEST_GROUP(Atomic) {
-};
+TEST_GROUP(Atomic) {};
 
 TEST(Atomic, SanityNonAtomicAccess)
 {
@@ -65,7 +64,8 @@ TEST(Atomic, AtomicSquare)
 
 TEST(Atomic, ImmobileCapture)
 {
-    struct Immobile {
+    struct Immobile
+    {
         Immobile() { MOCK(Atomic)::CALL(ImmobileCaptureConstruct); }
         Immobile(const Immobile&) = delete;
         Immobile(Immobile&&) = delete;
@@ -88,4 +88,26 @@ TEST(Atomic, ImmobileCapture)
     CHECK(a == 2);
 
     MOCK(Atomic)::EXPECT(ImmobileCaptureDestroy);
+}
+
+TEST(Atomic, CompareAndSwap)
+{
+    pet::Atomic<uintptr_t> a(1);
+
+    CHECK(!a.compareAndSwap(0, 2));
+
+    CHECK(a == 1);
+
+    CHECK(a.compareAndSwap(1, 3));
+
+    CHECK(a == 3);
+}
+
+TEST(Atomic, Swap)
+{
+    pet::Atomic<uintptr_t> a(1);
+
+    CHECK(1 == a.swap(2));
+
+    CHECK(a == 2);
 }
