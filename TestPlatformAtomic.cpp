@@ -111,3 +111,34 @@ TEST(Atomic, Swap)
 
     CHECK(a == 2);
 }
+
+TEST(Atomic, IncrementDecrement)
+{
+    pet::Atomic<uintptr_t> x(0);
+
+    CHECK(0 == x.increment());
+    CHECK(1 == x.increment(2));
+    CHECK(3 == x);
+    CHECK(3 == x.decrement());
+    CHECK(2 == x.decrement(2));
+    CHECK(0 == x);
+}
+
+TEST(Atomic, SetIfSomething)
+{
+    pet::Atomic<uintptr_t> x(0);
+
+    CHECK(0 == x.set(5));
+    CHECK(5 == x.setIfGreater(3));
+    CHECK(5 == x);
+    CHECK(5 == x.setIfGreater(7));
+    CHECK(7 == x);
+
+    CHECK(7 == x.setIfLess(9));
+    CHECK(7 == x);
+    CHECK(7 == x.setIfLess(4));
+    CHECK(4 == x);
+
+    CHECK(4 == x.setIfLess(2));
+    CHECK(2 == x);
+}
